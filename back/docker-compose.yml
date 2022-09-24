@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  #Mysl Service
+  mysqldb:
+    image: mysql:8
+    container_name: mysqldb
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=mysqldb
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=1234
+    restart: always
+    networks:
+      - web_network
+    ports:
+      - 8888:3306
+  #Mongodb Service
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    networks:
+      - web_network
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    ports:
+      - 27017:27017
+
+networks:
+  web_network:
+    name: web_network
+    driver: bridge
