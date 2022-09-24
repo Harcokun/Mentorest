@@ -11,10 +11,10 @@ datasource db {
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   email         String
   name          String
   surname       String
   password      String
-  profile_image String
+  profile_image String?
 }

@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto, s3File: any) {
     const emailArray = await this.prisma.user.findMany({
       select: { email: true },
     });
@@ -22,6 +22,12 @@ export class UserService {
       parseInt(process.env.SALT),
     );
     createUserDto.password = hashPassword;
+    if (s3File !== undefined) {
+      console.log(typeof s3File.Location);
+
+      createUserDto.profile_image = s3File.Location;
+    }
+
     return await this.prisma.user.create({ data: createUserDto });
   }
 }
