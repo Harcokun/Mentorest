@@ -38,10 +38,13 @@ export class UserController {
     @Req() req,
   ) {
     try {
+      console.log(createUserDto);
+      console.log('file ', file);
+
       if (file) {
         var s3File = await this.s3Service.uploadFile(file);
       }
-
+      // return { Error: 'Invalid user requirement' };
       return await this.userService.createUser(createUserDto, s3File);
     } catch (err) {
       console.log(err);
