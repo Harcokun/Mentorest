@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TextFormRegister from "../components/TextFormRegister";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../hooks/UserContext";
+import { NavbarContext } from "../hooks/NavbarContext";
 
-const Register = () => {
+const RegisterMentee = () => {
+  const navigate = useNavigate();
   const RegExEmail = /.+@.+\..+/gm;
   const [EmailTextCSS, setEmailTextCSS] = useState("");
   const [PasswordCSS, setPasswordCSS] = useState("");
+  const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target[0].value, e.target[1].value);
     const checkEmail = RegExEmail.test(e.target[0].value);
     let checkPassword = false;
     if (e.target[1].value === e.target[2].value && e.target[1].value) {
@@ -23,12 +28,33 @@ const Register = () => {
     } else {
       setEmailTextCSS("rgb(239 68 68)");
     }
-    console.log(EmailTextCSS, PasswordCSS);
+
+    if (checkPassword && checkEmail) {
+      try {
+        axios
+          .post(process.env.REACT_APP_REST_API + "/user", {
+            email: e.target[0].value,
+            password: e.target[1].value,
+            name: e.target[3].value,
+            file: e.target[4].value,
+            surname: e.target[5].value,
+          })
+          .then((res) => {
+            console.log(res);
+            navigate("/login", { replace: true });
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
+  useEffect(() => {
+    setState("register");
+  });
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        เข้าสู่ระบบ
+        ลงทะเบียนสำหรับผู้รับคำปรึกษา
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
@@ -106,4 +132,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterMentee;

@@ -7,8 +7,14 @@ import {
   Routes,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Register from "./pages/Register";
+import Register from "./pages/RegisterMentor";
 import Login from "./pages/Login";
+import Main from "./pages/Main";
+import UserProvider from "./hooks/UserContext";
+import EditProfile from "./pages/EditProfile";
+import RegisterMentor from "./pages/RegisterMentor";
+import RegisterMentee from "./pages/RegisterMentee";
+import NavbarProvider from "./hooks/NavbarContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -17,17 +23,51 @@ function App() {
       element: <Login />,
     },
     {
-      path: "/register",
-      element: <Register />,
+      path: "/register/mentor",
+      element: <RegisterMentor />,
+    },
+    {
+      path: "/register/mentee",
+      element: <RegisterMentee />,
+    },
+    {
+      path: "/",
+      element: <Main />,
+    },
+    {
+      path: "/edit-profile",
+      element: <EditProfile />,
     },
   ]);
   return (
-    <div className="App">
-      <Navbar />
-      <div className="content">
-        <RouterProvider router={router} />
-      </div>
-    </div>
+    <UserProvider>
+      <NavbarProvider>
+        <div className="App">
+          <Navbar />
+          <div className="content">
+            <Routes>
+              <Route exact path="/" element={<Main />}></Route>
+              <Route exact path="/login" element={<Login />}></Route>
+              <Route
+                exact
+                path="/register/mentee"
+                element={<RegisterMentee />}
+              ></Route>
+              <Route
+                exact
+                path="/register/mentor"
+                element={<RegisterMentor />}
+              ></Route>
+              <Route
+                exact
+                path="/edit-profile"
+                element={<EditProfile />}
+              ></Route>
+            </Routes>
+          </div>
+        </div>
+      </NavbarProvider>
+    </UserProvider>
   );
 }
 

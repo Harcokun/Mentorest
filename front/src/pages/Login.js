@@ -1,10 +1,33 @@
+import axios from "axios";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import TextForm from "../components/TextForm";
+import { NavbarContext } from "../hooks/NavbarContext";
+import { UserContext } from "../hooks/UserContext";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { Username, setUsername, Password, setPassword, Token, setToken } =
+    useContext(UserContext);
+  const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
-    console.log(e.target[0].value, e.target[1].value);
     e.preventDefault();
+    console.log(e.target[0].value, e.target[1].value);
+    axios
+      .post(process.env.REACT_APP_REST_API + "/auth/signin", {
+        email: e.target[0].value,
+        password: e.target[1].value,
+      })
+      .then((res) => {
+        setUsername(e.target[0].value);
+        setPassword(e.target[1].value);
+        setToken(res.data.token);
+        navigate("/", { replace: true });
+      });
   };
+  useEffect(() => {
+    setState("login");
+  });
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
