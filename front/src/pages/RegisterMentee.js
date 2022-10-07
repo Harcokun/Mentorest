@@ -13,6 +13,7 @@ const RegisterMentee = () => {
   const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log({ no: e.target[4].files[0] });
     const checkEmail = RegExEmail.test(e.target[0].value);
     let checkPassword = false;
     if (e.target[1].value === e.target[2].value && e.target[1].value) {
@@ -36,7 +37,7 @@ const RegisterMentee = () => {
             email: e.target[0].value,
             password: e.target[1].value,
             name: e.target[3].value,
-            file: e.target[4].value,
+            file: e.target[4].files[0],
             surname: e.target[5].value,
           })
           .then((res) => {
