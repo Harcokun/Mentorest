@@ -23,10 +23,10 @@ services:
       - web_network
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: 1234
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=1234
     ports:
-      - 27017:27017
+      - 8080:27017
 
 networks:
   web_network:

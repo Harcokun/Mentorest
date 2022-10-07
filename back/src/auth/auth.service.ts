@@ -4,6 +4,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -37,5 +38,11 @@ export class AuthService {
     } else {
       throw new ConflictException('Invalid password');
     }
+  }
+
+  async validateUser(data: any) {
+    return this.jwtService.decode(data);
+
+    // this.jwtService.decode();
   }
 }

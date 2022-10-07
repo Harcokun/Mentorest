@@ -1,11 +1,37 @@
+import { DeleteUser } from './dto/delete-user.dto';
 import { PrismaService } from './../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+
+import { Observable } from 'rxjs';
+import { ClientGrpc } from '@nestjs/microservices';
+
+interface HeroesService {
+  FindOne(id: HeroById): Observable<any>;
+}
+
+interface HeroById {
+  id: number;
+}
+
+interface Hero {
+  data: string;
+}
+
 @Injectable()
-export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+export class UserService implements OnModuleInit {
+  private heroesService: HeroesService;
+
+  onModuleInit() {
+    this.heroesService = this.client.getService<HeroesService>('HeroesService');
+  }
+
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('HERO_PACKAGE') private client: ClientGrpc,
+  ) {}
 
   async createUser(createUserDto: CreateUserDto, s3File: any) {
     const emailArray = await this.prisma.user.findMany({
@@ -29,5 +55,11 @@ export class UserService {
     }
 
     return await this.prisma.user.create({ data: createUserDto });
+  }
+
+  async deleteUser(deleteUser: number): Promise<Observable<string>> {
+    // console.log(deleteUser);
+
+    return this.heroesService.FindOne({ id: deleteUser });
   }
 }
