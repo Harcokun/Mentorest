@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.js"
+      integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div>
+      <input type="text" id="amount" placeholder="amount" />
+      <button onclick="genQR()">generate</button>
+      <img src="" alt="qrcode" id="imgqr" />
+    </div>
+
+    <script>
+      function genQR() {
+        $.ajax({
+          method: 'post',
+          url: 'http://localhost:3001/genqr',
+          data: {
+            amount: 555,
+          },
+          success: function (response) {
+            $('#imgqr').attr('src', response.result);
+          },
+          error: function (response) {
+            console.log(response);
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

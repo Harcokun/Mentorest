@@ -35,6 +35,9 @@ export class AppController {
           id: data.id,
         },
       });
+
+      console.log('Successfully delete user');
+
       return {
         data: 'Successfully delete user',
       };

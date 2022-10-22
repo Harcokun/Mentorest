@@ -15,6 +15,10 @@ import {
   LoggingMongo,
   LogSchema,
 } from './database/mongo/schema/mongodb.schema';
+import { MenteeModule } from './modules/mentee/mentee.module';
+import { ViewMenteeModule } from './modules/view-mentee/view-mentee.module';
+import { AcceptMenteeModule } from './modules/accept-mentee/accept-mentee.module';
+import { FilterMenteeModule } from './modules/filter-mentee/filter-mentee.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,6 +34,11 @@ import {
     UserModule,
     PrismaModule,
     LoggingModule,
+
+    MenteeModule,
+    ViewMenteeModule,
+    AcceptMenteeModule,
+    FilterMenteeModule,
   ],
   controllers: [],
   providers: [

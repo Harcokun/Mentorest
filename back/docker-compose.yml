@@ -27,6 +27,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=1234
     ports:
       - 8080:27017
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - web_network
 
 networks:
   web_network:

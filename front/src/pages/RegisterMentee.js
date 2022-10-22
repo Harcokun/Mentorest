@@ -32,13 +32,18 @@ const RegisterMentee = () => {
 
     if (checkPassword && checkEmail) {
       try {
+        var formData = new FormData();
+        formData.append("email", e.target[0].value);
+        formData.append("password", e.target[1].value);
+        formData.append("name", e.target[3].value);
+        formData.append("surname", e.target[5].value);
+        formData.append("file", e.target[4].files[0]);
+        console.log(formData);
         axios
-          .post(process.env.REACT_APP_REST_API + "/user", {
-            email: e.target[0].value,
-            password: e.target[1].value,
-            name: e.target[3].value,
-            file: e.target[4].files[0],
-            surname: e.target[5].value,
+          .post(process.env.REACT_APP_REST_API + "/user", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           })
           .then((res) => {
             console.log(res);

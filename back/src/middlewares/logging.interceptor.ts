@@ -22,7 +22,7 @@ export class LoggingInterceptor implements NestInterceptor {
   ) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request_at = new Date();
-    if ((context.switchToHttp().getRequest().url = '/auth/logout')) {
+    if (context.switchToHttp().getRequest().url == '/auth/logout') {
       return next.handle();
     }
     return next.handle().pipe(

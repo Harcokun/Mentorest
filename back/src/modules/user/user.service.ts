@@ -62,4 +62,29 @@ export class UserService implements OnModuleInit {
 
     return this.heroesService.FindOne({ id: deleteUser });
   }
+
+  async getInfoUser(id: number) {
+    return await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        email: true,
+        name: true,
+        surname: true,
+        profile_image: true,
+      },
+    });
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateUserDto,
+      },
+    });
+  }
 }

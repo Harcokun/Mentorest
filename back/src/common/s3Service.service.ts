@@ -1,6 +1,6 @@
 import { Injectable, Req, Res } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class S3Service {
   AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
@@ -23,7 +23,7 @@ export class S3Service {
   async s3_upload(file, bucket, name, mimetype) {
     const params = {
       Bucket: bucket,
-      Key: String(name),
+      Key: String(name + uuidv4()),
       Body: file,
       ContentType: mimetype,
       ContentDisposition: 'inline',

@@ -22,17 +22,36 @@ export class AuthService {
       where: { email: createAuthDto.email },
       select: { password: true, id: true },
     });
-    if (!user) {
+    const admin = await this.prismaService.admin.findFirst({
+      where: { email: createAuthDto.email },
+      select: { password: true, id: true },
+    });
+
+    const mentee = await this.prismaService.mentee.findFirst({
+      where: { email: createAuthDto.email },
+      select: { password: true, id: true },
+    });
+    if ([user, admin, mentee].filter((data) => data !== null).length === 0) {
       throw new NotFoundException('Invalid email');
     } else {
     }
-    const isValidPwd = await bcrypt.compare(
-      createAuthDto.password,
-      user.password,
-    );
+
+    var isValidPwd;
+    if (user)
+      isValidPwd = await bcrypt.compare(createAuthDto.password, user.password);
+
+    if (admin)
+      isValidPwd = await bcrypt.compare(createAuthDto.password, admin.password);
+    if (mentee)
+      isValidPwd = await bcrypt.compare(
+        createAuthDto.password,
+        mentee.password,
+      );
+
     if (isValidPwd) {
       const token = this.jwtService.sign({
-        id: user.id,
+        id: user ? user.id : admin ? admin.id : mentee.id,
+        position: user ? 'user' : admin ? 'admin' : 'mentee',
       });
       return { token };
     } else {
