@@ -1,9 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DeleteAccountButton from "../components/DeleteAccountButton";
 import TextFormRegister from "../components/TextFormRegister";
+import { UserContext } from "../hooks/UserContext";
 
 const EditProfile = () => {
+  const { Username, setUsername, Password, setPassword, Token, setToken } =
+    useContext(UserContext);
   const RegExEmail = /.+@.+\..+/gm;
   const [EmailTextCSS, setEmailTextCSS] = useState("");
   const [PasswordCSS, setPasswordCSS] = useState("");

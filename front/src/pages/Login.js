@@ -13,17 +13,25 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e.target[0].value, e.target[1].value);
-    axios
-      .post(process.env.REACT_APP_REST_API + "/auth/signin", {
-        email: e.target[0].value,
-        password: e.target[1].value,
-      })
-      .then((res) => {
-        setUsername(e.target[0].value);
-        setPassword(e.target[1].value);
-        setToken(res.data.token);
-        navigate("/", { replace: true });
-      });
+    setUsername("value");
+    setPassword("value");
+    setToken("res.data.token");
+    navigate("/", { replace: true });
+    try {
+      axios
+        .post(process.env.REACT_APP_REST_API + "/auth/signin", {
+          email: e.target[0].value,
+          password: e.target[1].value,
+        })
+        .then((res) => {
+          setUsername(e.target[0].value);
+          setPassword(e.target[1].value);
+          setToken(res.data.token);
+          navigate("/", { replace: true });
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     setState("login");

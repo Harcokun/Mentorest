@@ -32,6 +32,10 @@ const Navbar = () => {
       setLoginAble(false);
       setRegisterAble(false);
     }
+    if (NavState === "main-not-login") {
+      setLoginAble(true);
+      setRegisterAble(true);
+    }
   }, [NavState]);
   return (
     <div className="shadow-lg shadow-gray-300 flex place-content-between">
