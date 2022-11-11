@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DeleteAccountButton from "../components/DeleteAccountButton";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
@@ -69,6 +69,11 @@ const EditProfile = () => {
     console.log(SurnameData);
   };
 
+  useEffect(() => {
+    setEmailData("ana@hotmail.com");
+    setNameData("name");
+    setSurnameData("surname");
+  }, []);
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
