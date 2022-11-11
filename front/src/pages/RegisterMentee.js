@@ -10,6 +10,11 @@ const RegisterMentee = () => {
   const RegExEmail = /.+@.+\..+/gm;
   const [EmailTextCSS, setEmailTextCSS] = useState("");
   const [PasswordCSS, setPasswordCSS] = useState("");
+  const [File, setFile] = useState();
+  const [FileURL, setFileURL] = useState();
+  const handleSetFile = (e) => {
+    setFile(e.target.files[0]);
+  };
   const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +61,17 @@ const RegisterMentee = () => {
   };
   useEffect(() => {
     setState("register");
-  });
+    if (!File) {
+      setFileURL(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(File);
+    setFileURL(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [File]);
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
@@ -102,12 +117,26 @@ const RegisterMentee = () => {
                   />
                 </div>
                 <div className="w-[50%]">
-                  <TextFormRegister
-                    sidetext="รูปภาพ"
-                    type="file"
-                    sidetextback=""
-                    color=""
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6">"รูปภาพ"</div>
+                      <div className="flex-col flex">
+                        <input
+                          type="file"
+                          className={`border-[#8157A1]/50 border-2 rounded-md w-[60%]`}
+                          name=""
+                          id=""
+                          onChange={handleSetFile}
+                        />
+                        <button className="w-[60%]">
+                          <a href={FileURL} target="_blank">
+                            Preview
+                          </a>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <img src={FileURL} width={"100%"} /> */}
                 </div>
               </div>
               <div className="w-[50%]">
