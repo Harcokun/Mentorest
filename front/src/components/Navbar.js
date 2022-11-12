@@ -38,9 +38,9 @@ const Navbar = () => {
     }
   }, [NavState]);
   return (
-    <div className="shadow-lg shadow-gray-300 flex place-content-between">
+    <div className="shadow-lg shadow-gray-300 flex place-content-between w-full fixed bg-white">
       <div className="p-4 px-10 font-bold text-[40px] text-[#8157A1]">
-        Mentorest
+        <a href="/">Mentorest</a>
       </div>
       <div className="fixed right-2 top-2 flex place-items-center">
         {Username && (

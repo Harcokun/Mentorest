@@ -35,7 +35,7 @@ function App() {
       element: <Main />,
     },
     {
-      path: "/edit-profile",
+      path: "/user/info",
       element: <EditProfile />,
     },
   ]);
@@ -44,6 +44,7 @@ function App() {
       <NavbarProvider>
         <div className="App">
           <Navbar />
+          <div className="w-full h-24 pb-1/2 bg-white"></div>
           <div className="content">
             <Routes>
               <Route exact path="/" element={<Main />}></Route>
