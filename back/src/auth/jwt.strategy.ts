@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET,
-      fromHeader: 'TOKEN',
+      fromHeader: 'Authorization',
     });
   }
 
@@ -22,12 +22,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (position === 'user') {
       var user = await this.prismaService.user.findFirst({ where: { id } });
     } else if (position === 'admin') {
-      var admin = await this.prismaService.user.findFirst({ where: { id } });
-    } else if (position === 'mentee') {
-      var mentee = await this.prismaService.user.findFirst({ where: { id } });
+      var admin = await this.prismaService.admin.findFirst({ where: { id } });
+    } else if (position === 'mentor') {
+      var mentor = await this.prismaService.mentor.findFirst({
+        where: { id },
+      });
     }
 
-    if ([user, admin, mentee].filter((data) => data !== null).length === 0) {
+    if ([user, admin, mentor].filter((data) => data !== null).length === 0) {
       throw new UnauthorizedException(`user id ${id} not found`);
     } else {
       return payload;

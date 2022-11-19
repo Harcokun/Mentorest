@@ -9,6 +9,8 @@ export class AppController {
   @EventPattern('id')
   async acceptMentee(data: Record<string, unknown>) {
     const number = Number(data);
+    console.log('accepted mentor');
+
     await this.prisma.mentee.update({
       where: {
         id: number,

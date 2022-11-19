@@ -20,7 +20,7 @@ model User {
   booking       Booking[]
 }
 
-model Mentee {
+model Mentor {
   id                  Int       @id @default(autoincrement())
   email               String
   name                String
@@ -34,26 +34,21 @@ model Mentee {
   telephone_number    String
   bookbank_number     String
   is_active           Boolean   @default(false)
+  price_rate          Int       @default(250)
+  date_time_booking   String
   booking             Booking[]
 }
 
 model Booking {
-  id                  Int          @id @default(autoincrement())
-  id_user             Int
-  id_mentee           Int
-  url_conferrence     String
-  amount_payment      Int
-  payment_done        Boolean      @default(false)
-  user_booking        User         @relation(fields: [id_user], references: [id])
-  mentee_booking      Mentee       @relation(fields: [id_mentee], references: [id])
-  is_canceled         Boolean      @default(false)
-  confirm_payment_img PaymentImg[]
-}
-
-model PaymentImg {
-  id        Int      @id @default(autoincrement())
-  Booking   Booking? @relation(fields: [bookingId], references: [id])
-  bookingId Int?
+  id              Int     @id @default(autoincrement())
+  id_user         Int
+  id_mentor       Int
+  url_conferrence String?
+  payment_img     String
+  date_booking    String
+  time_booking    String
+  user_booking    User    @relation(fields: [id_user], references: [id])
+  mentor_booking  Mentor  @relation(fields: [id_mentor], references: [id])
 }
 
 model Admin {

@@ -15,10 +15,11 @@ import {
   LoggingMongo,
   LogSchema,
 } from './database/mongo/schema/mongodb.schema';
-import { MenteeModule } from './modules/mentee/mentee.module';
-import { ViewMenteeModule } from './modules/view-mentee/view-mentee.module';
-import { AcceptMenteeModule } from './modules/accept-mentee/accept-mentee.module';
-import { FilterMenteeModule } from './modules/filter-mentee/filter-mentee.module';
+import { MentorModule } from './modules/mentor/mentor.module';
+import { ViewMentorModule } from './modules/view-mentor/view-mentor.module';
+import { AcceptMentorModule } from './modules/accept-mentor/accept-mentor.module';
+import { FilterMentorModule } from './modules/filter-mentor/filter-mentor.module';
+import { BookingModule } from './modules/booking/booking.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,10 +36,11 @@ import { FilterMenteeModule } from './modules/filter-mentee/filter-mentee.module
     PrismaModule,
     LoggingModule,
 
-    MenteeModule,
-    ViewMenteeModule,
-    AcceptMenteeModule,
-    FilterMenteeModule,
+    MentorModule,
+    ViewMentorModule,
+    AcceptMentorModule,
+    FilterMentorModule,
+    BookingModule,
   ],
   controllers: [],
   providers: [
