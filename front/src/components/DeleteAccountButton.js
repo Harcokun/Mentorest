@@ -26,7 +26,7 @@ const DeleteAccountButton = ({ prop }) => {
   };
   return (
     <button
-      className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 p-2 rounded-md"
+      className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md"
       onClick={handleDelete}
     >
       ลบบัญชี

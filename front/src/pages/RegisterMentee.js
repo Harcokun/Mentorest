@@ -10,6 +10,9 @@ const RegisterMentee = () => {
   const RegExEmail = /.+@.+\..+/gm;
   const [EmailTextCSS, setEmailTextCSS] = useState("");
   const [PasswordCSS, setPasswordCSS] = useState("");
+  const [NameCSS, setNameCSS] = useState("");
+  const [SurnameCSS, setSurnameCSS] = useState("");
+  const [ImageCSS, setImageCSS] = useState("");
   const [File, setFile] = useState();
   const [FileURL, setFileURL] = useState();
   const handleSetFile = (e) => {
@@ -34,8 +37,28 @@ const RegisterMentee = () => {
     } else {
       setEmailTextCSS("rgb(239 68 68)");
     }
-
-    if (checkPassword && checkEmail) {
+    if (e.target[3].value) {
+      setNameCSS("");
+    } else {
+      setNameCSS("rgb(239 68 68)");
+    }
+    if (e.target[5].value) {
+      setSurnameCSS("");
+    } else {
+      setSurnameCSS("rgb(239 68 68)");
+    }
+    if (e.target[4].files[0]) {
+      setImageCSS("");
+    } else {
+      setImageCSS("rgb(239 68 68)");
+    }
+    if (
+      checkPassword &&
+      checkEmail &&
+      e.target[3].value &&
+      e.target[5].value &&
+      e.target[4].value
+    ) {
       try {
         var formData = new FormData();
         formData.append("email", e.target[0].value);
@@ -81,24 +104,35 @@ const RegisterMentee = () => {
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
           <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
             <div className="space-y-4 pt-10">
-              <div className="w-[50%]">
-                <TextFormRegister
-                  sidetext="อีเมล"
-                  type="text"
-                  sidetextback=""
-                  color={EmailTextCSS}
-                />
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6">อีเมล</div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          !EmailTextCSS
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-full`}
+                        name=""
+                        id=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex place-content-between">
-                <div className="w-[50%]">
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
                   <TextFormRegister
                     sidetext="รหัสผ่าน"
                     type="password"
                     sidetextback=""
-                    color=""
+                    color={PasswordCSS}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="sm:w-[50%]">
                   <TextFormRegister
                     sidetext="ยืนยันรหัสผ่าน"
                     type="password"
@@ -107,55 +141,77 @@ const RegisterMentee = () => {
                   />
                 </div>
               </div>
-              <div className="flex place-content-between">
-                <div className="w-[50%]">
-                  <TextFormRegister
-                    sidetext="ชื่อจริง"
-                    type="text"
-                    sidetextback=""
-                    color=""
-                  />
-                </div>
-                <div className="w-[50%]">
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6">"รูปภาพ"</div>
-                      <div className="flex-col flex">
+                      <div className="p-2 px-6">ชื่อจริง</div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !NameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                          }  border-2 rounded-md w-full`}
+                          name=""
+                          id=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-[80%]  place-content-between flex  flex-col">
+                      <div className="p-2 px-6">รูปภาพ</div>
+                      <div className="flex px-6">
                         <input
                           type="file"
-                          className={`border-[#8157A1]/50 border-2 rounded-md w-[60%]`}
+                          className={`${
+                            !ImageCSS ? "border-[#8157A1]/50" : "border-red-500"
+                          } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
                           onChange={handleSetFile}
                         />
-                        <button className="w-[60%]">
+                        {/* <button className="w-[60%]">
                           <a href={FileURL} target="_blank">
                             Preview
                           </a>
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>
-                  {/* <img src={FileURL} width={"100%"} /> */}
+                  <div className="flex place-content-center">
+                    <img src={FileURL} width={"60%"} />
+                  </div>
                 </div>
               </div>
-              <div className="w-[50%]">
-                <TextFormRegister
-                  sidetext="นามสกุล"
-                  type="text"
-                  sidetextback=""
-                  color=""
-                />
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6">นามสกุล</div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                        } border-2 rounded-md w-full`}
+                        name=""
+                        id=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="flex place-content-center py-4">
-              <div className="w-1/2 flex place-content-center pl-20">
-                <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 p-2 rounded-md">
+              <div className="w-1/2 flex place-content-center sm:pl-20">
+                <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md">
                   ย้อนกลับ
                 </button>
               </div>
               <div className="w-1/2 flex place-content-center">
-                <button className="bg-[#8157A1] text-white px-10 p-2 rounded-md">
+                <button className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md">
                   สมัครสมาชิก
                 </button>
               </div>

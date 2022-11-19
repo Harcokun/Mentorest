@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 export const UserContext = createContext();
 const UserProvider = ({ children }) => {
-  const [Username, setUsername] = useState("");
+  const [Username, setUsername] = useState("as");
   const [Password, setPassword] = useState("");
   const [Token, setToken] = useState("");
   return (

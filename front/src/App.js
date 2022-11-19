@@ -11,10 +11,13 @@ import Register from "./pages/RegisterMentor";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import UserProvider from "./hooks/UserContext";
-import EditProfile from "./pages/EditProfile";
+import EditProfileMentee from "./pages/EditProfileMentee";
+import EditProfileMentor from "./pages/EditProfileMentor";
 import RegisterMentor from "./pages/RegisterMentor";
 import RegisterMentee from "./pages/RegisterMentee";
 import NavbarProvider from "./hooks/NavbarContext";
+import VerifyMentor from "./pages/VerifyMentor";
+import MentorInfoReservation from "./pages/MentorInfoReservation";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,8 +38,12 @@ function App() {
       element: <Main />,
     },
     {
-      path: "/user/info",
-      element: <EditProfile />,
+      path: "/user/info/mentee",
+      element: <EditProfileMentee />,
+    },
+    {
+      path: "/user/info/mentor",
+      element: <EditProfileMentor />,
     },
   ]);
   return (
@@ -61,8 +68,23 @@ function App() {
               ></Route>
               <Route
                 exact
-                path="/edit-profile"
-                element={<EditProfile />}
+                path="/user/info/mentee"
+                element={<EditProfileMentee />}
+              ></Route>
+              <Route
+                exact
+                path="/user/info/mentor"
+                element={<EditProfileMentor />}
+              ></Route>
+              <Route
+                exact
+                path="/verify/mentor/:id"
+                element={<VerifyMentor />}
+              ></Route>
+              <Route
+                exact
+                path="/user/info/reserve/:id"
+                element={<MentorInfoReservation />}
               ></Route>
             </Routes>
           </div>
