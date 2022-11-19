@@ -1,22 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import TextFormRegister from "../components/TextFormRegister";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import { UserContext } from "../hooks/UserContext";
 import { NavbarContext } from "../hooks/NavbarContext";
 
-const RegisterMentor = () => {
+const VerifyMentor = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const RegExEmail = /.+@.+\..+/gm;
-  const [color, setColor] = useState(false);
-  const [EmailTextCSS, setEmailTextCSS] = useState("");
-  const [PasswordCSS, setPasswordCSS] = useState("");
-  const [NameCSS, setNameCSS] = useState("");
-  const [SurnameCSS, setSurnameCSS] = useState("");
-  const [ProfileCSS, setProfileCSS] = useState("");
-  const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
-  const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
-  const [TextareaCSS, setTextareaCSS] = useState("");
+  const [EmailData, setEmailData] = useState("");
+  const [NameData, setNameData] = useState("");
+  const [SurnameData, setSurnameData] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
@@ -24,9 +19,17 @@ const RegisterMentor = () => {
   const [ProfileCitizen, setProfileCitizen] = useState();
   const [ProfileCitizenURL, setProfileCitizenURL] = useState();
   const [textarea, setTextarea] = useState(
-    "Explain yourself. Please refrain from confuse your future self"
+    "The content of a textarea goes in the value attribute"
   );
 
+  const handleVerify = () => {
+    //go back
+    navigate("/", { replace: true });
+  };
+  const handleFinish = () => {
+    //go back
+    navigate("/", { replace: true });
+  };
   const handleTextareaChange = (event) => {
     setTextarea(event.target.value);
   };
@@ -43,62 +46,8 @@ const RegisterMentor = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
-    const checkEmail = RegExEmail.test(e.target[0].value);
-    let checkPassword = false;
-    if (e.target[1].value === e.target[2].value && e.target[1].value) {
-      checkPassword = true;
-    }
-    if (checkPassword) {
-      setPasswordCSS("");
-    } else {
-      setPasswordCSS("rgb(239 68 68)");
-    }
-    if (checkEmail) {
-      setEmailTextCSS("");
-    } else {
-      setEmailTextCSS("rgb(239 68 68)");
-    }
 
-    if (e.target[3].value) {
-      setNameCSS("");
-    } else {
-      setNameCSS("rgb(239 68 68)");
-    }
-    if (e.target[5].value) {
-      setSurnameCSS("");
-    } else {
-      setSurnameCSS("rgb(239 68 68)");
-    }
-    if (e.target[4].value) {
-      setProfileCSS("");
-    } else {
-      setProfileCSS("rgb(239 68 68)");
-    }
-    if (e.target[6].value) {
-      setProfileCitizenCSS("");
-    } else {
-      setProfileCitizenCSS("rgb(239 68 68)");
-    }
-    if (e.target[7].value) {
-      setMoneyProfileCSS("");
-    } else {
-      setMoneyProfileCSS("rgb(239 68 68)");
-    }
-    if (e.target[8].value) {
-      setTextareaCSS("");
-    } else {
-      setTextareaCSS("rgb(239 68 68)");
-    }
-    if (
-      checkPassword &&
-      checkEmail &&
-      e.target[3].value &&
-      e.target[5].value &&
-      e.target[4].value &&
-      e.target[6].value &&
-      e.target[7].value &&
-      e.target[8].value
-    ) {
+    if (true) {
       try {
         var formData = new FormData();
         formData.append("email", e.target[0].value);
@@ -177,26 +126,21 @@ const RegisterMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      อีเมล<div className="text-red-600">*</div>
-                    </div>
+                    <div className="p-2 px-6 flex">อีเมล</div>
                     <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !EmailTextCSS
-                            ? "border-[#8157A1]/50"
-                            : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
+                      <div
+                        className={`border-[#8157A1]/50 border-2 rounded-md`}
                         name=""
                         id=""
-                      />
+                      >
+                        {EmailData ? EmailData : "EmailData"}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="sm:flex place-content-between">
-                <div className="sm:w-[50%]">
+              {/* <div className="flex place-content-between">
+                <div className="w-[50%]">
                   <TextFormRegister
                     sidetext="รหัสผ่าน"
                     type="password"
@@ -204,7 +148,7 @@ const RegisterMentor = () => {
                     color={PasswordCSS}
                   />
                 </div>
-                <div className="sm:w-[50%]">
+                <div className="w-[50%]">
                   <TextFormRegister
                     sidetext="ยืนยันรหัสผ่าน"
                     type="password"
@@ -212,72 +156,48 @@ const RegisterMentor = () => {
                     color={PasswordCSS}
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">
-                        ชื่อจริง<div className="text-red-600">*</div>
-                      </div>
+                      <div className="p-2 px-6 flex">ชื่อจริง</div>
                       <div>
-                        <input
-                          type={"text"}
-                          className={`${
-                            !NameCSS ? "border-[#8157A1]/50" : "border-red-500"
-                          }  border-2 rounded-md w-[100%]`}
+                        <div
+                          className={`border-[#8157A1]/50 border-2 rounded-md`}
                           name=""
                           id=""
-                        />
+                        >
+                          {NameData ? NameData : "NameData"}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
-                      <div className="p-2 px-6 flex">
-                        รูปภาพ<div className="text-red-600">*</div>
-                      </div>
-                      <div className="flex-col px-6 flex">
-                        <input
-                          type="file"
-                          className={`${
-                            !ProfileCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetProfile}
-                        />
-                        {/* <button className="w-[60%]">
-                          <a href={ProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={ProfileURL} width={"100%"} />
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">รูปภาพ</div>
+                      <div className="flex-col flex">
+                        <img src={ProfileURL} width={"60%"} />
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex place-content-center"></div> */}
+                  <div className="flex place-content-center"></div>
                 </div>
               </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      นามสกุล<div className="text-red-600">*</div>
-                    </div>
+                    <div className="p-2 px-6 flex">นามสกุล</div>
                     <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
+                      <div
+                        className={`border-[#8157A1]/50 border-2 rounded-md`}
                         name=""
                         id=""
-                      />
+                      >
+                        {SurnameData ? SurnameData : "SurnameData"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -286,26 +206,8 @@ const RegisterMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6 flex">
-                        รูปบัตรประชาชน<div className="text-red-600">*</div>
-                      </div>
+                      <div className="p-2 px-6 flex">รูปบัตรประชาชน</div>
                       <div className="flex-col px-6  flex">
-                        <input
-                          type="file"
-                          className={`${
-                            !ProfileCitizenCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetProfileCitizen}
-                        />
-                        {/* <button className="w-[60%]">
-                          <a href={ProfileCitizenURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
                         <img src={ProfileCitizenURL} width={"100%"} />
                       </div>
                     </div>
@@ -316,22 +218,6 @@ const RegisterMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between ">
                       <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
                       <div className="flex-col flex px-6 ">
-                        <input
-                          type="file"
-                          className={`${
-                            !MoneyProfileCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetMoneyProfile}
-                        />
-                        {/* <button className="w-[60%]">
-                          <a href={MoneyProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
                         <img src={MoneyProfileURL} width={"100%"} />
                       </div>
                     </div>
@@ -347,29 +233,32 @@ const RegisterMentor = () => {
                       </div>
                     </div>
                     <div className="w-full flex place-content-center">
-                      <textarea
-                        placeholder={textarea}
-                        onChange={handleTextareaChange}
-                        className={`${
-                          !TextareaCSS
-                            ? "border-[#8157A1]/50"
-                            : "border-red-500"
-                        } border-2 rounded-md w-[80%]`}
-                      />
+                      <div
+                        className={`border-[#8157A1]/50
+                         border-2 rounded-md w-[80%]`}
+                      >
+                        {textarea ? textarea : "textarea"}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex place-content-center py-4">
-              <div className="w-1/2 flex place-content-center sm:pl-20">
-                <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md">
-                  ย้อนกลับ
+            <div className="flex place-content-end py-4">
+              <div className="flex place-content-end sm:px-20 ">
+                <button
+                  className=" bg-[#F8FD0F] text-[#8157A1] border-2 px-6 sm:px-10 p-2 rounded-md"
+                  onClick={handleVerify}
+                >
+                  verify
                 </button>
               </div>
-              <div className="w-1/2 flex place-content-center">
-                <button className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md">
-                  สมัครสมาชิก
+              <div className="px-2 sm:px-5  sm:pr-28 flex">
+                <button
+                  className="bg-[#8157A1] text-white px-6 sm:px-10 p-2 rounded-md"
+                  onClick={handleFinish}
+                >
+                  เสร็จสิ้น
                 </button>
               </div>
             </div>
@@ -380,4 +269,4 @@ const RegisterMentor = () => {
   );
 };
 
-export default RegisterMentor;
+export default VerifyMentor;

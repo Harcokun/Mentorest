@@ -3,7 +3,7 @@ import MentorList from "./MentorList";
 const MentorLists = ({ Mentorlists }) => {
   return (
     <div className="w-full">
-      <div className="grid grid-cols-3">
+      <div className="grid sm:grid-cols-3">
         {Mentorlists.map((Mentor) => {
           console.log(Mentor.name, "aaaaaaaaaa");
           return (

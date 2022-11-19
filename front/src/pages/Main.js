@@ -50,16 +50,16 @@ const Main = () => {
   useEffect(() => {
     if (Username) {
       setState("main");
+      //getData
     } else {
       setState("main-not-login");
     }
   }, []);
   return (
     <div className="w-full h-full">
-      <div className="pt-10 py-6 font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3] flex place-items-center place-content-center">
+      {/* <div className="pt-10 py-6 font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3] flex place-items-center place-content-center">
         Mentorest
-      </div>
-      aaa
+      </div> */}
       <div>
         <MentorLists Mentorlists={Mentors} />
       </div>

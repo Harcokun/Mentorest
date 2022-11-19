@@ -1,14 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import TextFormRegister from "../components/TextFormRegister";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-// import { UserContext } from "../hooks/UserContext";
-import { NavbarContext } from "../hooks/NavbarContext";
+import { useContext, useEffect, useState } from "react";
+import DeleteAccountButton from "../components/DeleteAccountButton";
+import TextFormRegister from "../components/TextFormRegister";
+import { UserContext } from "../hooks/UserContext";
 
-const RegisterMentor = () => {
-  const navigate = useNavigate();
+const EditProfileMentor = () => {
+  const { Username, setUsername, Password, setPassword, Token, setToken } =
+    useContext(UserContext);
   const RegExEmail = /.+@.+\..+/gm;
-  const [color, setColor] = useState(false);
   const [EmailTextCSS, setEmailTextCSS] = useState("");
   const [PasswordCSS, setPasswordCSS] = useState("");
   const [NameCSS, setNameCSS] = useState("");
@@ -17,6 +16,9 @@ const RegisterMentor = () => {
   const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
   const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
   const [TextareaCSS, setTextareaCSS] = useState("");
+  const [EmailData, setEmailData] = useState("");
+  const [NameData, setNameData] = useState("");
+  const [SurnameData, setSurnameData] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
@@ -24,7 +26,7 @@ const RegisterMentor = () => {
   const [ProfileCitizen, setProfileCitizen] = useState();
   const [ProfileCitizenURL, setProfileCitizenURL] = useState();
   const [textarea, setTextarea] = useState(
-    "Explain yourself. Please refrain from confuse your future self"
+    "The content of a textarea goes in the value attribute"
   );
 
   const handleTextareaChange = (event) => {
@@ -39,10 +41,16 @@ const RegisterMentor = () => {
   const handleSetProfileCitizen = (e) => {
     setProfileCitizen(e.target.files[0]);
   };
-  const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
+    console.log(
+      e.target[0].value,
+      e.target[1].value,
+      e.target[2].value,
+      e.target[3].value,
+      e.target[4].value,
+      e.target[5].value
+    );
     const checkEmail = RegExEmail.test(e.target[0].value);
     let checkPassword = false;
     if (e.target[1].value === e.target[2].value && e.target[1].value) {
@@ -93,12 +101,13 @@ const RegisterMentor = () => {
       checkPassword &&
       checkEmail &&
       e.target[3].value &&
-      e.target[5].value &&
       e.target[4].value &&
+      e.target[5].value &&
       e.target[6].value &&
       e.target[7].value &&
       e.target[8].value
     ) {
+      console.log(e.target[4].value);
       try {
         var formData = new FormData();
         formData.append("email", e.target[0].value);
@@ -106,26 +115,63 @@ const RegisterMentor = () => {
         formData.append("name", e.target[3].value);
         formData.append("surname", e.target[5].value);
         formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[6].files[0]);
-        formData.append("file", e.target[7].files[0]);
         console.log(formData);
         axios
-          .post(process.env.REACT_APP_REST_API + "/user", formData, {
+          .post(process.env.REACT_APP_REST_API + "/user/update", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: "Bearer " + Token,
             },
           })
           .then((res) => {
             console.log(res);
-            navigate("/login", { replace: true });
           });
       } catch (err) {
         console.log(err);
       }
     }
   };
+
+  const handleEmailChange = (e) => {
+    setEmailData(e.target.value);
+    console.log(EmailData);
+  };
+
+  const handleNameChange = (e) => {
+    setNameData(e.target.value);
+    console.log(NameData);
+  };
+
+  const handleSurnameChange = (e) => {
+    setSurnameData(e.target.value);
+    console.log(SurnameData);
+  };
+
   useEffect(() => {
-    setState("register");
+    try {
+      axios
+        .get(
+          process.env.REACT_APP_REST_API + "/user/info",
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + Token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setEmailData(res.data.email);
+          setNameData(res.data.name);
+          setSurnameData(res.data.surname);
+          // setImageData(res.data.image);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!Profile) {
       setProfileURL(undefined);
       return;
@@ -139,7 +185,6 @@ const RegisterMentor = () => {
   }, [Profile]);
 
   useEffect(() => {
-    setState("register");
     if (!ProfileCitizen) {
       setProfileCitizenURL(undefined);
       return;
@@ -153,7 +198,6 @@ const RegisterMentor = () => {
   }, [ProfileCitizen]);
 
   useEffect(() => {
-    setState("register");
     if (!MoneyProfile) {
       setMoneyProfileURL(undefined);
       return;
@@ -168,7 +212,7 @@ const RegisterMentor = () => {
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        ลงทะเบียนสำหรับผู้ให้คำปรึกษา
+        แก้ไขข้อมูลส่วนตัว
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
@@ -190,6 +234,8 @@ const RegisterMentor = () => {
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         id=""
+                        value={EmailData}
+                        onChange={handleEmailChange}
                       />
                     </div>
                   </div>
@@ -228,6 +274,8 @@ const RegisterMentor = () => {
                           }  border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
+                          value={NameData}
+                          onChange={handleNameChange}
                         />
                       </div>
                     </div>
@@ -251,16 +299,17 @@ const RegisterMentor = () => {
                           id=""
                           onChange={handleSetProfile}
                         />
-                        {/* <button className="w-[60%]">
+                        {/* <button className="w-[100%]">
                           <a href={ProfileURL} target="_blank">
                             Preview
                           </a>
                         </button> */}
-                        <img src={ProfileURL} width={"100%"} />
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex place-content-center"></div> */}
+                  <div className="flex place-content-center">
+                    <img src={ProfileURL} width={"60%"} />
+                  </div>
                 </div>
               </div>
               <div className="sm:w-[50%]">
@@ -277,6 +326,8 @@ const RegisterMentor = () => {
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         id=""
+                        value={SurnameData}
+                        onChange={handleSurnameChange}
                       />
                     </div>
                   </div>
@@ -301,7 +352,7 @@ const RegisterMentor = () => {
                           id=""
                           onChange={handleSetProfileCitizen}
                         />
-                        {/* <button className="w-[60%]">
+                        {/* <button className="w-[100%]">
                           <a href={ProfileCitizenURL} target="_blank">
                             Preview
                           </a>
@@ -327,7 +378,7 @@ const RegisterMentor = () => {
                           id=""
                           onChange={handleSetMoneyProfile}
                         />
-                        {/* <button className="w-[60%]">
+                        {/* <button className="w-[100%]">
                           <a href={MoneyProfileURL} target="_blank">
                             Preview
                           </a>
@@ -363,13 +414,14 @@ const RegisterMentor = () => {
             </div>
             <div className="flex place-content-center py-4">
               <div className="w-1/2 flex place-content-center sm:pl-20">
-                <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md">
-                  ย้อนกลับ
-                </button>
+                <DeleteAccountButton />
               </div>
               <div className="w-1/2 flex place-content-center">
-                <button className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md">
-                  สมัครสมาชิก
+                <button
+                  className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md"
+                  type="submit"
+                >
+                  ยืนยัน
                 </button>
               </div>
             </div>
@@ -380,4 +432,4 @@ const RegisterMentor = () => {
   );
 };
 
-export default RegisterMentor;
+export default EditProfileMentor;

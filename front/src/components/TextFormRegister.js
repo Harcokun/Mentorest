@@ -5,14 +5,14 @@ const TextFormRegister = ({ sidetext, sidetextback, type, color }) => {
   }
   return (
     <div className="p-2 py-6 place-content-center flex w-[full]">
-      <div className="w-[80%]  place-content-between flex ">
+      <div className="w-full sm:w-[80%]  place-content-between flex ">
         <div className="p-2 px-6">{sidetext}</div>
         <div>
           <input
             type={type}
             className={`${
               !color ? "border-[#8157A1]/50" : "border-red-500"
-            } border-2 rounded-md w-[60%]`}
+            } border-2 rounded-md w-[100%]`}
             name=""
             id=""
             onChange={() => {
