@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import DeleteAccountButton from "../components/DeleteAccountButton";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
+import logo from "../hamburger.png";
 
 const EditProfileMentor = () => {
   const { Username, setUsername, Password, setPassword, Token, setToken } =
@@ -15,22 +16,41 @@ const EditProfileMentor = () => {
   const [ProfileCSS, setProfileCSS] = useState("");
   const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
   const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
+  const [MobilePhoneCSS, setMobilePhoneCSS] = useState("");
+  const [CitizenIDCSS, setCitizenIDCSS] = useState("");
+  const [BankIDCSS, setBankIDCSS] = useState("");
+
+  const [PriceCSS, setPriceCSS] = useState("");
   const [TextareaCSS, setTextareaCSS] = useState("");
   const [EmailData, setEmailData] = useState("");
   const [NameData, setNameData] = useState("");
+  const [PasswordData, setPasswordData] = useState("");
+  const [RePasswordData, setRePasswordData] = useState("");
+  const [PhoneNumberData, setPhoneNumberData] = useState("");
   const [SurnameData, setSurnameData] = useState("");
+  const [PriceData, setPriceData] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
   const [ProfileURL, setProfileURL] = useState();
   const [ProfileCitizen, setProfileCitizen] = useState();
   const [ProfileCitizenURL, setProfileCitizenURL] = useState();
+  const [CitizenID, setCitizenID] = useState("");
+  const [BankID, setBankID] = useState("");
+
   const [textarea, setTextarea] = useState(
     "The content of a textarea goes in the value attribute"
   );
 
+  const [textareaDate, setTextareaDate] = useState(
+    "Explain yourself. Please refrain from confuse your future self"
+  );
+
   const handleTextareaChange = (event) => {
     setTextarea(event.target.value);
+  };
+  const handleTextareaDateChange = (event) => {
+    setTextareaDate(event.target.value);
   };
   const handleSetProfile = (e) => {
     setProfile(e.target.files[0]);
@@ -43,17 +63,9 @@ const EditProfileMentor = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(
-      e.target[0].value,
-      e.target[1].value,
-      e.target[2].value,
-      e.target[3].value,
-      e.target[4].value,
-      e.target[5].value
-    );
-    const checkEmail = RegExEmail.test(e.target[0].value);
+    console.log(e);
     let checkPassword = false;
-    if (e.target[1].value === e.target[2].value && e.target[1].value) {
+    if (e.target[0].value === e.target[1].value && e.target[0].value) {
       checkPassword = true;
     }
     if (checkPassword) {
@@ -61,51 +73,27 @@ const EditProfileMentor = () => {
     } else {
       setPasswordCSS("rgb(239 68 68)");
     }
-    if (checkEmail) {
-      setEmailTextCSS("");
-    } else {
-      setEmailTextCSS("rgb(239 68 68)");
-    }
 
-    if (e.target[3].value) {
-      setNameCSS("");
-    } else {
-      setNameCSS("rgb(239 68 68)");
-    }
-    if (e.target[5].value) {
-      setSurnameCSS("");
-    } else {
-      setSurnameCSS("rgb(239 68 68)");
-    }
-    if (e.target[4].value) {
+    if (e.target[2].value) {
       setProfileCSS("");
     } else {
       setProfileCSS("rgb(239 68 68)");
     }
-    if (e.target[6].value) {
-      setProfileCitizenCSS("");
+    if (e.target[3].value) {
+      setMobilePhoneCSS("");
     } else {
-      setProfileCitizenCSS("rgb(239 68 68)");
+      setMobilePhoneCSS("rgb(239 68 68)");
     }
-    if (e.target[7].value) {
-      setMoneyProfileCSS("");
+    if (e.target[5].value) {
+      setPriceCSS("");
     } else {
-      setMoneyProfileCSS("rgb(239 68 68)");
-    }
-    if (e.target[8].value) {
-      setTextareaCSS("");
-    } else {
-      setTextareaCSS("rgb(239 68 68)");
+      setPriceCSS("rgb(239 68 68)");
     }
     if (
       checkPassword &&
-      checkEmail &&
+      e.target[2].value &&
       e.target[3].value &&
-      e.target[4].value &&
-      e.target[5].value &&
-      e.target[6].value &&
-      e.target[7].value &&
-      e.target[8].value
+      e.target[5].value
     ) {
       console.log(e.target[4].value);
       try {
@@ -113,8 +101,16 @@ const EditProfileMentor = () => {
         formData.append("email", e.target[0].value);
         formData.append("password", e.target[1].value);
         formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("file", e.target[4].files[0]);
+        formData.append("surname", e.target[4].value);
+        formData.append("file", e.target[5].files[0]);
+        formData.append("phonenumber", e.target[6].value);
+        formData.append("CitizenID", e.target[7].value);
+        formData.append("BankID", e.target[8].value);
+        formData.append("Citizenfile", e.target[9].files[0]);
+        formData.append("Bankfile", e.target[10].files[0]);
+        formData.append("Yourself", e.target[11].value);
+        formData.append("price", e.target[12].value);
+        formData.append("datetime", e.target[13].value);
         console.log(formData);
         axios
           .post(process.env.REACT_APP_REST_API + "/user/update", formData, {
@@ -131,20 +127,17 @@ const EditProfileMentor = () => {
       }
     }
   };
-
-  const handleEmailChange = (e) => {
-    setEmailData(e.target.value);
-    console.log(EmailData);
+  const handlePasswordChange = (e) => {
+    setPasswordData(e.target.value);
   };
-
-  const handleNameChange = (e) => {
-    setNameData(e.target.value);
-    console.log(NameData);
+  const handleRePasswordChange = (e) => {
+    setRePasswordData(e.target.value);
   };
-
-  const handleSurnameChange = (e) => {
-    setSurnameData(e.target.value);
-    console.log(SurnameData);
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumberData(e.target.value);
+  };
+  const handlePriceChange = (e) => {
+    setPriceData(e.target.value);
   };
 
   useEffect(() => {
@@ -221,61 +214,32 @@ const EditProfileMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      อีเมล<div className="text-red-600">*</div>
-                    </div>
-                    <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !EmailTextCSS
-                            ? "border-[#8157A1]/50"
-                            : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
-                        name=""
-                        id=""
-                        value={EmailData}
-                        onChange={handleEmailChange}
-                      />
+                    <div className="p-2 px-6 flex">อีเมล</div>
+                    <div className="p-2">
+                      <div className={`rounded-md`} name="" id="">
+                        {EmailData ? EmailData : "EmailData"}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="รหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                  />
-                </div>
-                <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                  />
-                </div>
-              </div>
-              <div className="sm:flex place-content-between">
-                <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">
-                        ชื่อจริง<div className="text-red-600">*</div>
-                      </div>
-                      <div>
+                      <div className="p-2 sm:px-6">รหัสผ่าน</div>
+                      <div className="p-2">
                         <input
-                          type={"text"}
+                          type={"password"}
                           className={`${
-                            !NameCSS ? "border-[#8157A1]/50" : "border-red-500"
-                          }  border-2 rounded-md w-[100%]`}
+                            !PasswordCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          value={NameData}
-                          onChange={handleNameChange}
+                          value={PasswordData}
+                          onChange={handlePasswordChange}
                         />
                       </div>
                     </div>
@@ -283,11 +247,58 @@ const EditProfileMentor = () => {
                 </div>
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
-                      <div className="p-2 px-6 flex">
-                        รูปภาพ<div className="text-red-600">*</div>
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 sm:px-6">ยืนยันรหัสผ่าน</div>
+                      <div className="p-2">
+                        <input
+                          type={"password"}
+                          className={`${
+                            !PasswordCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          } border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          value={RePasswordData}
+                          onChange={handleRePasswordChange}
+                        />
                       </div>
-                      <div className="flex-col px-6 flex">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row place-content-between">
+                <div className="w-full flex flex-col">
+                  <div className="w-[100%]">
+                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                      <div className="w-[80%]  place-content-between flex ">
+                        <div className="p-2 sm:px-6 flex">ชื่อจริง</div>
+                        <div>
+                          <div className={`rounded-md p-2`} name="" id="">
+                            {NameData ? NameData : "NameData"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-[100%]">
+                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                      <div className="w-[80%]  place-content-between flex ">
+                        <div className="p-2 sm:px-6 flex">นามสกุล</div>
+                        <div>
+                          <div className={`rounded-md p-2`} name="" id="">
+                            {SurnameData ? SurnameData : "SurnameData"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[100%]">
+                  <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                    <div className="w-[80%]  place-content-between flex flex-col sm:flex-row">
+                      <div className="p-2 sm:px-6 flex">รูปภาพ</div>
+                      <div className="flex-col flex">
                         <input
                           type="file"
                           className={`${
@@ -304,31 +315,57 @@ const EditProfileMentor = () => {
                             Preview
                           </a>
                         </button> */}
+                        {ProfileURL ? (
+                          <img src={ProfileURL} width={"60%"} />
+                        ) : (
+                          <img src={logo} />
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="flex place-content-center">
-                    <img src={ProfileURL} width={"60%"} />
+                </div>
+              </div>
+
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">เบอร์โทรศัพท์</div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !MobilePhoneCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          value={PhoneNumberData}
+                          onChange={handlePhoneNumberChange}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="sm:w-[50%]">
-                <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      นามสกุล<div className="text-red-600">*</div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">หมายเลขบัตรประชาชน</div>
+                      <div className="p-2">
+                        {CitizenID ? CitizenID : "CitizenID"}
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
-                        name=""
-                        id=""
-                        value={SurnameData}
-                        onChange={handleSurnameChange}
-                      />
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">หมายเลขบัญชีธนาคาร</div>
+
+                      <div className="p-2">{BankID ? BankID : "BankID"}</div>
                     </div>
                   </div>
                 </div>
@@ -337,27 +374,18 @@ const EditProfileMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6 flex">
-                        รูปบัตรประชาชน<div className="text-red-600">*</div>
-                      </div>
+                      <div className="p-2 px-6 flex">รูปบัตรประชาชน</div>
                       <div className="flex-col px-6  flex">
-                        <input
-                          type="file"
-                          className={`${
-                            !ProfileCitizenCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetProfileCitizen}
-                        />
                         {/* <button className="w-[100%]">
                           <a href={ProfileCitizenURL} target="_blank">
                             Preview
                           </a>
                         </button> */}
-                        <img src={ProfileCitizenURL} width={"100%"} />
+                        {ProfileCitizenURL ? (
+                          <img src={ProfileCitizenURL} width={"100%"} />
+                        ) : (
+                          <img src={logo} width={"100%"} />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -367,23 +395,11 @@ const EditProfileMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between ">
                       <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
                       <div className="flex-col flex px-6 ">
-                        <input
-                          type="file"
-                          className={`${
-                            !MoneyProfileCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetMoneyProfile}
-                        />
-                        {/* <button className="w-[100%]">
-                          <a href={MoneyProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={MoneyProfileURL} width={"100%"} />
+                        {MoneyProfileURL ? (
+                          <img src={MoneyProfileURL} width={"100%"} />
+                        ) : (
+                          <img src={logo} width={"100%"} />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -401,11 +417,43 @@ const EditProfileMentor = () => {
                       <textarea
                         placeholder={textarea}
                         onChange={handleTextareaChange}
+                        value={textarea}
+                        className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="items-center px-4 flex">ราคา(/ชั่วโมง)</div>
+                    <div className="p-2">
+                      <input
+                        type={"text"}
                         className={`${
-                          !TextareaCSS
-                            ? "border-[#8157A1]/50"
-                            : "border-red-500"
-                        } border-2 rounded-md w-[80%]`}
+                          !PriceCSS ? "border-[#8157A1]/50" : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[100%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[100%] flex flex-col ">
+                    <div className="  flex place-content-center w-full">
+                      <div className="w-[80%]">
+                        <div>วัน/เวลาที่สะดวก</div>
+                      </div>
+                    </div>
+                    <div className="w-full flex place-content-center">
+                      <textarea
+                        placeholder={textareaDate}
+                        onChange={handleTextareaDateChange}
+                        className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
                       />
                     </div>
                   </div>

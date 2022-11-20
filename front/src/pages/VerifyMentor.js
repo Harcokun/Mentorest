@@ -4,14 +4,23 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 // import { UserContext } from "../hooks/UserContext";
 import { NavbarContext } from "../hooks/NavbarContext";
+import logo from "../hamburger.png";
 
 const VerifyMentor = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const RegExEmail = /.+@.+\..+/gm;
   const [EmailData, setEmailData] = useState("");
+  const [PasswordData, setPasswordData] = useState("");
+  const [RePasswordData, setRePasswordData] = useState("");
   const [NameData, setNameData] = useState("");
   const [SurnameData, setSurnameData] = useState("");
+  const [PhoneNumber, setPhoneNumber] = useState("");
+  const [CitizenID, setCitizenID] = useState("");
+  const [BankID, setBankID] = useState("");
+  const [Yourself, setYourself] = useState("");
+  const [price, setPrice] = useState("");
+  const [Datetime, setDatetime] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
@@ -125,78 +134,110 @@ const VerifyMentor = () => {
             <div className="space-y-4 pt-10">
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">อีเมล</div>
-                    <div>
-                      <div
-                        className={`border-[#8157A1]/50 border-2 rounded-md`}
-                        name=""
-                        id=""
-                      >
+                  <div className="w-[80%]  place-content-between flex ">
+                    <div className="p-2 sm:px-6 flex">อีเมล</div>
+                    <div className="p-2">
+                      <div className={`rounded-md`} name="" id="">
                         {EmailData ? EmailData : "EmailData"}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {/* <div className="flex place-content-between">
-                <div className="w-[50%]">
-                  <TextFormRegister
-                    sidetext="รหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                  />
-                </div>
-                <div className="w-[50%]">
-                  <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                  />
-                </div>
-              </div> */}
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">ชื่อจริง</div>
-                      <div>
-                        <div
-                          className={`border-[#8157A1]/50 border-2 rounded-md`}
-                          name=""
-                          id=""
-                        >
-                          {NameData ? NameData : "NameData"}
+                    <div className="w-[80%]  place-content-between flex ">
+                      <div className="p-2 sm:px-6">รหัสผ่าน</div>
+                      <div className="p-2">
+                        {PasswordData ? PasswordData : "PasswordData"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-[80%]  place-content-between flex ">
+                      <div className="p-2 sm:px-6">ยืนยันรหัสผ่าน</div>
+                      <div className="p-2">
+                        {RePasswordData ? RePasswordData : "RePasswordData"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row place-content-between">
+                <div className="w-full flex flex-col">
+                  <div className="w-[100%]">
+                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                      <div className="w-[80%]  place-content-between flex ">
+                        <div className="p-2 sm:px-6 flex">ชื่อจริง</div>
+                        <div>
+                          <div className={`rounded-md p-2`} name="" id="">
+                            {NameData ? NameData : "NameData"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-[100%]">
+                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                      <div className="w-[80%]  place-content-between flex ">
+                        <div className="p-2 sm:px-6 flex">นามสกุล</div>
+                        <div>
+                          <div className={`rounded-md p-2`} name="" id="">
+                            {SurnameData ? SurnameData : "SurnameData"}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">รูปภาพ</div>
+                <div className="w-[100%]">
+                  <div className="p-2 sm:py-6 place-content-center flex w-[full]">
+                    <div className="w-[80%]  place-content-between flex flex-col sm:flex-row">
+                      <div className="p-2 sm:px-6 flex">รูปภาพ</div>
                       <div className="flex-col flex">
-                        <img src={ProfileURL} width={"60%"} />
+                        {ProfileURL ? (
+                          <img src={ProfileURL} width={"60%"} />
+                        ) : (
+                          <img src={logo} />
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="flex place-content-center"></div>
                 </div>
               </div>
-              <div className="sm:w-[50%]">
-                <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">นามสกุล</div>
-                    <div>
-                      <div
-                        className={`border-[#8157A1]/50 border-2 rounded-md`}
-                        name=""
-                        id=""
-                      >
-                        {SurnameData ? SurnameData : "SurnameData"}
+
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">เบอร์โทรศัพท์</div>
+                      <div>
+                        <div className={`rounded-md w-[100%]`} name="" id="">
+                          {PhoneNumber ? PhoneNumber : "PhoneNumber"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">หมายเลขบัตรประชาชน</div>
+                      <div>{CitizenID ? CitizenID : "CitizenID"}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">หมายเลขบัญชีธนาคาร</div>
+                      <div>
+                        <div>{BankID ? BankID : "BankID"}</div>
                       </div>
                     </div>
                   </div>
@@ -208,7 +249,11 @@ const VerifyMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between ">
                       <div className="p-2 px-6 flex">รูปบัตรประชาชน</div>
                       <div className="flex-col px-6  flex">
-                        <img src={ProfileCitizenURL} width={"100%"} />
+                        {ProfileCitizenURL ? (
+                          <img src={ProfileCitizenURL} width={"100%"} />
+                        ) : (
+                          <img src={logo} width={"100%"} />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -218,7 +263,7 @@ const VerifyMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between ">
                       <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
                       <div className="flex-col flex px-6 ">
-                        <img src={MoneyProfileURL} width={"100%"} />
+                        <img src={MoneyProfileURL} width={"60%"} />
                       </div>
                     </div>
                   </div>
