@@ -18,6 +18,8 @@ import RegisterMentee from "./pages/RegisterMentee";
 import NavbarProvider from "./hooks/NavbarContext";
 import VerifyMentor from "./pages/VerifyMentor";
 import MentorInfoReservation from "./pages/MentorInfoReservation";
+import BookingDetailMentor from "./pages/BookingDetailMentor";
+import BookingDetailMentee from "./pages/BookingDetailMentee";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,6 +46,14 @@ function App() {
     {
       path: "/user/info/mentor",
       element: <EditProfileMentor />,
+    },
+    {
+      path: "/booking/mentor",
+      element: <BookingDetailMentor />,
+    },
+    {
+      path: "/booking/mentee",
+      element: <BookingDetailMentee />,
     },
   ]);
   return (
@@ -85,6 +95,16 @@ function App() {
                 exact
                 path="/user/info/reserve/:id"
                 element={<MentorInfoReservation />}
+              ></Route>
+              <Route
+                exact
+                path="/booking/mentor"
+                element={<BookingDetailMentor />}
+              ></Route>
+              <Route
+                exact
+                path="/booking/mentee"
+                element={<BookingDetailMentee />}
               ></Route>
             </Routes>
           </div>
