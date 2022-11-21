@@ -13,13 +13,13 @@ const RegisterMentor = () => {
   const [PasswordCSS, setPasswordCSS] = useState("");
   const [NameCSS, setNameCSS] = useState("");
   const [SurnameCSS, setSurnameCSS] = useState("");
-  const [PhoneNumberCSS, setPhoneNumberCSS] = useState("");
+  const [MobilePhoneCSS, setMobilePhoneCSS] = useState("");
+  const [CitizenIDCSS, setCitizenIDCSS] = useState("");
+  const [BankIDCSS, setBankIDCSS] = useState("");
   const [ProfileCSS, setProfileCSS] = useState("");
   const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
   const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
-  const [TextareaCSS, setTextareaCSS] = useState("");
-  const [HourlyPriceCSS, setHourlyPriceCSS] = useState();
-  const [AvailableTimeCSS, setAvailableTimeCSS] = useState();
+  const [PriceCSS, setPriceCSS] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
@@ -27,12 +27,18 @@ const RegisterMentor = () => {
   const [ProfileCitizen, setProfileCitizen] = useState("");
   const [ProfileCitizenURL, setProfileCitizenURL] = useState("");
   const [textarea, setTextarea] = useState(
+    "Explain yourself. Please refrain from confusing your future self"
+  );
+  const [textareaDate, setTextareaDate] = useState(
     "Explain yourself. Please refrain from confuse your future self"
   );
   const [availableTime, setAvailableTime] = useState("");
 
   const handleTextareaChange = (event) => {
     setTextarea(event.target.value);
+  };
+  const handleTextareaDateChange = (event) => {
+    setTextareaDate(event.target.value);
   };
   const handleSetProfile = (e) => {
     setProfile(e.target.files[0]);
@@ -73,21 +79,25 @@ const RegisterMentor = () => {
       e.target[6].value &&
       e.target[7].value &&
       e.target[8].value &&
-      e.target[10].value
+      e.target[9].value &&
+      e.target[10].value &&
+      e.target[12].value
     ) {
       try {
         var formData = new FormData();
         formData.append("email", e.target[0].value);
         formData.append("password", e.target[1].value);
         formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("phonenumber", e.target[6].value);
-        formData.append("description", e.target[9].value);
-        formData.append("price", e.target[10].value);
-        formData.append("availabletime", e.target[11].value);
-        formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[7].files[0]);
-        formData.append("file", e.target[8].files[0]);
+        formData.append("surname", e.target[4].value);
+        formData.append("file", e.target[5].files[0]);
+        formData.append("CitizenID", e.target[6].value);
+        formData.append("CitizenID", e.target[7].value);
+        formData.append("BankID", e.target[8].value);
+        formData.append("Citizenfile", e.target[9].files[0]);
+        formData.append("Bankfile", e.target[10].files[0]);
+        formData.append("Yourself", e.target[11].value);
+        formData.append("price", e.target[12].value);
+        formData.append("datetime", e.target[13].value);
         console.log(formData);
         axios
           .post(process.env.REACT_APP_REST_API + "/user", formData, {
@@ -157,7 +167,7 @@ const RegisterMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
+                    <div className="  px-6 flex">
                       อีเมล<div className="text-red-600">*</div>
                     </div>
                     <div>
@@ -199,7 +209,7 @@ const RegisterMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">
+                      <div className="  px-6 flex">
                         ชื่อจริง<div className="text-red-600">*</div>
                       </div>
                       <div>
@@ -215,10 +225,33 @@ const RegisterMentor = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="px-6 flex">
+                        นามสกุล<div className="text-red-600">*</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !SurnameCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          } border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
-                      <div className="p-2 px-6 flex">
+                      <div className="  px-6 flex">
                         รูปภาพ<div className="text-red-600">*</div>
                       </div>
                       <div className="flex-col px-6 flex">
@@ -245,21 +278,69 @@ const RegisterMentor = () => {
                   {/* <div className="flex place-content-center"></div> */}
                 </div>
               </div>
-              <div className="sm:w-[50%]">
-                <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      นามสกุล<div className="text-red-600">*</div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">
+                        เบอร์โทรศัพท์<div className="text-red-600">*</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !MobilePhoneCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
-                        name=""
-                        id=""
-                      />
+                  </div>
+                </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">
+                        หมายเลขบัตรประชาชน<div className="text-red-600">*</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !CitizenIDCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">
+                        หมายเลขบัญชีธนาคาร<div className="text-red-600">*</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !BankIDCSS
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -287,7 +368,7 @@ const RegisterMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6 flex">
+                      <div className="  px-6 flex">
                         รูปบัตรประชาชน<div className="text-red-600">*</div>
                       </div>
                       <div className="flex-col px-6  flex">
@@ -315,7 +396,7 @@ const RegisterMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
+                      <div className="  px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
                       <div className="flex-col flex px-6 ">
                         <input
                           type="file"
@@ -342,7 +423,7 @@ const RegisterMentor = () => {
               <div className="w-[100%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-[100%] flex flex-col ">
-                    <div className="p-2 flex place-content-center w-full">
+                    <div className="  flex place-content-center w-full">
                       <div className="w-[80%]">
                         <div>อธิบายความเป็นตัวเอง</div>
                       </div>
@@ -351,11 +432,44 @@ const RegisterMentor = () => {
                       <textarea
                         placeholder={textarea}
                         onChange={handleTextareaChange}
+                        className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="  px-4 flex">
+                      ราคา(/ชั่วโมง)<div className="text-red-600">*</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
                         className={`${
-                          !TextareaCSS
-                            ? "border-[#8157A1]/50"
-                            : "border-red-500"
-                        } border-2 rounded-md w-[80%]`}
+                          !PriceCSS ? "border-[#8157A1]/50" : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[100%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[100%] flex flex-col ">
+                    <div className="  flex place-content-center w-full">
+                      <div className="w-[80%]">
+                        <div>วัน/เวลาที่สะดวก</div>
+                      </div>
+                    </div>
+                    <div className="w-full flex place-content-center">
+                      <textarea
+                        placeholder={textareaDate}
+                        onChange={handleTextareaDateChange}
+                        className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
                       />
                     </div>
                   </div>
@@ -404,6 +518,7 @@ const RegisterMentor = () => {
                 </div>
               </div>
             </div>
+
             <div className="flex place-content-center py-4">
               <div className="w-1/2 flex place-content-center sm:pl-20">
                 <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md">

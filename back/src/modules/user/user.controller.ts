@@ -59,9 +59,11 @@ export class UserController {
     return this.userService.deleteUser(user.id);
   }
 
-  @Post('user/info')
-  @UseGuards(AuthGuard())
+  @Get('user/info')
+  // @UseGuards(AuthGuard())
   async getInfo(@Req() req: any) {
+    console.log(req.body);
+
     const user = req.user;
     const infoUser = await this.userService.getInfoUser(user.id);
     return infoUser;
