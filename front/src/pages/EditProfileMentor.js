@@ -29,6 +29,8 @@ const EditProfileMentor = () => {
   const [PhoneNumberData, setPhoneNumberData] = useState("");
   const [SurnameData, setSurnameData] = useState("");
   const [PriceData, setPriceData] = useState("");
+  const [Yourself, setYourself] = useState("");
+  const [Datetime, setDatetime] = useState("");
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
@@ -46,8 +48,11 @@ const EditProfileMentor = () => {
     "Explain yourself. Please refrain from confuse your future self"
   );
 
-  const handleTextareaChange = (event) => {
-    setTextarea(event.target.value);
+  const handleYourselfChange = (event) => {
+    setYourself(event.target.value);
+  };
+  const handleDatetimeChange = (event) => {
+    setDatetime(event.target.value);
   };
   const handleTextareaDateChange = (event) => {
     setTextareaDate(event.target.value);
@@ -142,23 +147,29 @@ const EditProfileMentor = () => {
 
   useEffect(() => {
     try {
-      axios
-        .get(
-          process.env.REACT_APP_REST_API + "/user/info",
-          {},
-          {
-            headers: {
-              Authorization: "Bearer " + Token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          setEmailData(res.data.email);
-          setNameData(res.data.name);
-          setSurnameData(res.data.surname);
-          // setImageData(res.data.image);
-        });
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      axios.get(process.env.REACT_APP_REST_API + "/user").then((res) => {
+        console.log(res);
+        setEmailData(res.data.email);
+        setPasswordData(res.data.password);
+        setRePasswordData(res.data.password);
+        setNameData(res.data.name);
+        setSurnameData(res.data.surname);
+
+        setProfileURL(res.data.image);
+        setPhoneNumberData(res.data.phone);
+        setCitizenID(res.data.citizenID);
+        setBankID(res.data.bankID);
+        setYourself(res.data.about);
+        setPriceData(res.data.price);
+        setDatetime(res.data.date);
+        setMoneyProfileURL(res.data.bankimage);
+        setProfileCitizenURL(res.data.citizencard);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -217,7 +228,7 @@ const EditProfileMentor = () => {
                     <div className="p-2 px-6 flex">อีเมล</div>
                     <div className="p-2">
                       <div className={`rounded-md`} name="" id="">
-                        {EmailData ? EmailData : "EmailData"}
+                        {EmailData ? EmailData : "Dummy"}
                       </div>
                     </div>
                   </div>
@@ -275,7 +286,7 @@ const EditProfileMentor = () => {
                         <div className="p-2 sm:px-6 flex">ชื่อจริง</div>
                         <div>
                           <div className={`rounded-md p-2`} name="" id="">
-                            {NameData ? NameData : "NameData"}
+                            {NameData ? NameData : "Dummy"}
                           </div>
                         </div>
                       </div>
@@ -287,7 +298,7 @@ const EditProfileMentor = () => {
                         <div className="p-2 sm:px-6 flex">นามสกุล</div>
                         <div>
                           <div className={`rounded-md p-2`} name="" id="">
-                            {SurnameData ? SurnameData : "SurnameData"}
+                            {SurnameData ? SurnameData : "Dummy"}
                           </div>
                         </div>
                       </div>
@@ -355,7 +366,7 @@ const EditProfileMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
                       <div className="  px-6 flex">หมายเลขบัตรประชาชน</div>
                       <div className="p-2">
-                        {CitizenID ? CitizenID : "CitizenID"}
+                        {CitizenID ? CitizenID : "Dummy"}
                       </div>
                     </div>
                   </div>
@@ -365,7 +376,7 @@ const EditProfileMentor = () => {
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
                       <div className="  px-6 flex">หมายเลขบัญชีธนาคาร</div>
 
-                      <div className="p-2">{BankID ? BankID : "BankID"}</div>
+                      <div className="p-2">{BankID ? BankID : "Dummy"}</div>
                     </div>
                   </div>
                 </div>
@@ -416,8 +427,8 @@ const EditProfileMentor = () => {
                     <div className="w-full flex place-content-center">
                       <textarea
                         placeholder={textarea}
-                        onChange={handleTextareaChange}
-                        value={textarea}
+                        onChange={handleYourselfChange}
+                        value={Yourself}
                         className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
                       />
                     </div>
@@ -452,7 +463,8 @@ const EditProfileMentor = () => {
                     <div className="w-full flex place-content-center">
                       <textarea
                         placeholder={textareaDate}
-                        onChange={handleTextareaDateChange}
+                        onChange={handleDatetimeChange}
+                        value={Datetime}
                         className={`border-[#8157A1]/50 border-2 rounded-md w-[80%]`}
                       />
                     </div>

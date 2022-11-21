@@ -106,7 +106,7 @@ const RegisterMentee = () => {
             <div className="space-y-4 pt-10">
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-[80%]  place-content-between flex ">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
                     <div className="p-2 px-6">อีเมล</div>
                     <div>
                       <input
@@ -144,7 +144,7 @@ const RegisterMentee = () => {
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-[80%]  place-content-between flex ">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
                       <div className="p-2 px-6">ชื่อจริง</div>
                       <div>
                         <input
@@ -161,7 +161,7 @@ const RegisterMentee = () => {
                 </div>
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-[80%]  place-content-between flex  flex-col">
+                    <div className="w-full sm:w-[80%]  place-content-between flex  flex-col">
                       <div className="p-2 px-6">รูปภาพ</div>
                       <div className="flex px-6">
                         <input
@@ -188,7 +188,7 @@ const RegisterMentee = () => {
               </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-[80%]  place-content-between flex ">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
                     <div className="p-2 px-6">นามสกุล</div>
                     <div>
                       <input

@@ -21,15 +21,9 @@ const VerifyMentor = () => {
   const [Yourself, setYourself] = useState("");
   const [price, setPrice] = useState("");
   const [Datetime, setDatetime] = useState("");
-  const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
-  const [Profile, setProfile] = useState();
   const [ProfileURL, setProfileURL] = useState();
-  const [ProfileCitizen, setProfileCitizen] = useState();
   const [ProfileCitizenURL, setProfileCitizenURL] = useState();
-  const [textarea, setTextarea] = useState(
-    "The content of a textarea goes in the value attribute"
-  );
 
   const handleVerify = () => {
     //go back
@@ -38,18 +32,6 @@ const VerifyMentor = () => {
   const handleFinish = () => {
     //go back
     navigate("/", { replace: true });
-  };
-  const handleTextareaChange = (event) => {
-    setTextarea(event.target.value);
-  };
-  const handleSetProfile = (e) => {
-    setProfile(e.target.files[0]);
-  };
-  const handleSetMoneyProfile = (e) => {
-    setMoneyProfile(e.target.files[0]);
-  };
-  const handleSetProfileCitizen = (e) => {
-    setProfileCitizen(e.target.files[0]);
   };
   const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
@@ -82,47 +64,38 @@ const VerifyMentor = () => {
       }
     }
   };
-  useEffect(() => {
-    setState("register");
-    if (!Profile) {
-      setProfileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(Profile);
-    setProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [Profile]);
 
   useEffect(() => {
-    setState("register");
-    if (!ProfileCitizen) {
-      setProfileCitizenURL(undefined);
-      return;
+    setState("main");
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      axios.get(process.env.REACT_APP_REST_API + "/user").then((res) => {
+        console.log(res);
+        setEmailData(res.data.email);
+        setPasswordData(res.data.password);
+        setRePasswordData(res.data.password);
+        setNameData(res.data.name);
+        setSurnameData(res.data.surname);
+
+        setProfileURL(res.data.image);
+        setPhoneNumber(res.data.phone);
+        setCitizenID(res.data.citizenID);
+        setBankID(res.data.bankID);
+        setYourself(res.data.about);
+        setPrice(res.data.price);
+        setDatetime(res.data.date);
+        setMoneyProfileURL(res.data.bankimage);
+        setProfileCitizenURL(res.data.citizencard);
+        navigate("/login", { replace: true });
+      });
+    } catch (err) {
+      console.log(err);
     }
-
-    const objectUrl = URL.createObjectURL(ProfileCitizen);
-    setProfileCitizenURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [ProfileCitizen]);
-
-  useEffect(() => {
-    setState("register");
-    if (!MoneyProfile) {
-      setMoneyProfileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(MoneyProfile);
-    setMoneyProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [MoneyProfile]);
+  }, []);
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
@@ -282,7 +255,36 @@ const VerifyMentor = () => {
                         className={`border-[#8157A1]/50
                          border-2 rounded-md w-[80%]`}
                       >
-                        {textarea ? textarea : "textarea"}
+                        {Yourself ? Yourself : "Yourself"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="  px-6 flex">ราคา(/ชั่วโมง)</div>
+                      <div>{price ? price : "price"}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[100%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[100%] flex flex-col ">
+                    <div className="p-2 flex place-content-center w-full">
+                      <div className="w-[80%]">
+                        <div>อธิบายความเป็นตัวเอง</div>
+                      </div>
+                    </div>
+                    <div className="w-full flex place-content-center">
+                      <div
+                        className={`border-[#8157A1]/50
+                         border-2 rounded-md w-[80%]`}
+                      >
+                        {Datetime ? Datetime : "Datetime"}
                       </div>
                     </div>
                   </div>

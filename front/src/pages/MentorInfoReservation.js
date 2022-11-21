@@ -88,33 +88,33 @@ const MentorInfoReservation = () => {
       }
     }
   };
-  useEffect(() => {
-    setState("register");
-    if (!Profile) {
-      setProfileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(Profile);
-    setProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [Profile]);
 
   useEffect(() => {
-    setState("register");
-    if (!ProfileCitizen) {
-      setProfileCitizenURL(undefined);
-      return;
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      axios.get(process.env.REACT_APP_REST_API + "/user").then((res) => {
+        console.log(res);
+        setNameData(res.data.name);
+        setSurnameData(res.data.surname);
+
+        setProfileURL(res.data.image);
+        setCitizenID(res.data.citizenID);
+        setBankID(res.data.bankID);
+        setYourself(res.data.about);
+        setPrice(res.data.price);
+        setDatetime(res.data.date);
+        setMoneyProfileURL(res.data.bankimage);
+        setProfileCitizenURL(res.data.citizencard);
+        navigate("/login", { replace: true });
+      });
+    } catch (err) {
+      console.log(err);
     }
-
-    const objectUrl = URL.createObjectURL(ProfileCitizen);
-    setProfileCitizenURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [ProfileCitizen]);
+  }, []);
 
   useEffect(() => {
     setState("register");
