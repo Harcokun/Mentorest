@@ -13,19 +13,23 @@ const RegisterMentor = () => {
   const [PasswordCSS, setPasswordCSS] = useState("");
   const [NameCSS, setNameCSS] = useState("");
   const [SurnameCSS, setSurnameCSS] = useState("");
+  const [PhoneNumberCSS, setPhoneNumberCSS] = useState("");
   const [ProfileCSS, setProfileCSS] = useState("");
   const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
   const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
   const [TextareaCSS, setTextareaCSS] = useState("");
+  const [HourlyPriceCSS, setHourlyPriceCSS] = useState();
+  const [AvailableTimeCSS, setAvailableTimeCSS] = useState();
   const [MoneyProfile, setMoneyProfile] = useState();
   const [MoneyProfileURL, setMoneyProfileURL] = useState();
   const [Profile, setProfile] = useState();
-  const [ProfileURL, setProfileURL] = useState();
-  const [ProfileCitizen, setProfileCitizen] = useState();
-  const [ProfileCitizenURL, setProfileCitizenURL] = useState();
+  const [ProfileURL, setProfileURL] = useState("");
+  const [ProfileCitizen, setProfileCitizen] = useState("");
+  const [ProfileCitizenURL, setProfileCitizenURL] = useState("");
   const [textarea, setTextarea] = useState(
     "Explain yourself. Please refrain from confuse your future self"
   );
+  const [availableTime, setAvailableTime] = useState("");
 
   const handleTextareaChange = (event) => {
     setTextarea(event.target.value);
@@ -48,47 +52,18 @@ const RegisterMentor = () => {
     if (e.target[1].value === e.target[2].value && e.target[1].value) {
       checkPassword = true;
     }
-    if (checkPassword) {
-      setPasswordCSS("");
-    } else {
-      setPasswordCSS("rgb(239 68 68)");
-    }
-    if (checkEmail) {
-      setEmailTextCSS("");
-    } else {
-      setEmailTextCSS("rgb(239 68 68)");
-    }
-
-    if (e.target[3].value) {
-      setNameCSS("");
-    } else {
-      setNameCSS("rgb(239 68 68)");
-    }
-    if (e.target[5].value) {
-      setSurnameCSS("");
-    } else {
-      setSurnameCSS("rgb(239 68 68)");
-    }
-    if (e.target[4].value) {
-      setProfileCSS("");
-    } else {
-      setProfileCSS("rgb(239 68 68)");
-    }
-    if (e.target[6].value) {
-      setProfileCitizenCSS("");
-    } else {
-      setProfileCitizenCSS("rgb(239 68 68)");
-    }
-    if (e.target[7].value) {
-      setMoneyProfileCSS("");
-    } else {
-      setMoneyProfileCSS("rgb(239 68 68)");
-    }
-    if (e.target[8].value) {
-      setTextareaCSS("");
-    } else {
-      setTextareaCSS("rgb(239 68 68)");
-    }
+    checkPassword? setPasswordCSS("") : setPasswordCSS("rgb(239 68 68)");
+    checkEmail? setEmailTextCSS("") : setEmailTextCSS("rgb(239 68 68)");
+    e.target[3].value? setNameCSS("") : setNameCSS("rgb(239 68 68)");
+    e.target[4].value?  setProfileCSS("") : setProfileCSS("rgb(239 68 68)");
+    e.target[5].value? setSurnameCSS("") : setSurnameCSS("rgb(239 68 68)");
+    e.target[6].value? setPhoneNumberCSS("") : setPhoneNumberCSS("rgb(239 68 68)");
+    e.target[7].value? setProfileCitizenCSS("") : setProfileCitizenCSS("rgb(239 68 68)");
+    e.target[8].value? setMoneyProfileCSS("") : setMoneyProfileCSS("rgb(239 68 68)");
+    e.target[9].value? setTextareaCSS("") : setTextareaCSS("rgb(239 68 68)");
+    e.target[10].value? setHourlyPriceCSS("") : setHourlyPriceCSS("rgb(239 68 68)");
+    e.target[11].value? setAvailableTimeCSS("") : setAvailableTimeCSS("rgb(239 68 68)");
+    
     if (
       checkPassword &&
       checkEmail &&
@@ -97,7 +72,8 @@ const RegisterMentor = () => {
       e.target[4].value &&
       e.target[6].value &&
       e.target[7].value &&
-      e.target[8].value
+      e.target[8].value &&
+      e.target[10].value
     ) {
       try {
         var formData = new FormData();
@@ -105,9 +81,13 @@ const RegisterMentor = () => {
         formData.append("password", e.target[1].value);
         formData.append("name", e.target[3].value);
         formData.append("surname", e.target[5].value);
+        formData.append("phonenumber", e.target[6].value);
+        formData.append("textarea", e.target[9].value);
+        formData.append("price", e.target[10].value);
+        formData.append("availabletime", e.target[11].value);
         formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[6].files[0]);
         formData.append("file", e.target[7].files[0]);
+        formData.append("file", e.target[8].files[0]);
         console.log(formData);
         axios
           .post(process.env.REACT_APP_REST_API + "/user", formData, {
@@ -202,6 +182,7 @@ const RegisterMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
                 <div className="sm:w-[50%]">
@@ -210,6 +191,7 @@ const RegisterMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
               </div>
@@ -274,6 +256,25 @@ const RegisterMentor = () => {
                         type={"text"}
                         className={`${
                           !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6 flex">
+                      เบอร์โทรศัพท์<div className="text-red-600">*</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          !PhoneNumberCSS ? "border-[#8157A1]/50" : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         id=""
@@ -352,6 +353,48 @@ const RegisterMentor = () => {
                         onChange={handleTextareaChange}
                         className={`${
                           !TextareaCSS
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[80%]`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6 flex">
+                      ราคา(/ชั่วโมง)<div className="text-red-600">*</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          !HourlyPriceCSS ? "border-[#8157A1]/50" : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                        defaultValue={0}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[100%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-[100%] flex flex-col ">
+                    <div className="p-2 flex place-content-center w-full">
+                      <div className="w-[80%]">
+                        <div>วัน/เวลาที่สะดวก</div>
+                      </div>
+                    </div>
+                    <div className="w-full flex place-content-center">
+                      <textarea
+                        placeholder={""}
+                        onChange={(event) => {setAvailableTime(event.target.value)}}
+                        className={`${
+                          !AvailableTimeCSS
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}

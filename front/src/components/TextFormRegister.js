@@ -1,4 +1,4 @@
-const TextFormRegister = ({ sidetext, sidetextback, type, color }) => {
+const TextFormRegister = ({ sidetext, sidetextback, type, color, isRequired }) => {
   let back = false;
   if (sidetextback) {
     back = true;
@@ -6,7 +6,7 @@ const TextFormRegister = ({ sidetext, sidetextback, type, color }) => {
   return (
     <div className="p-2 py-6 place-content-center flex w-[full]">
       <div className="w-full sm:w-[80%]  place-content-between flex ">
-        <div className="p-2 px-6">{sidetext}</div>
+        <div className="flex flex-row p-2 px-6">{sidetext}{isRequired? <p className="text-red-600">*</p> : ""}</div>
         <div>
           <input
             type={type}

@@ -248,6 +248,7 @@ const EditProfileMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
                 <div className="sm:w-[50%]">
@@ -256,6 +257,7 @@ const EditProfileMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
               </div>

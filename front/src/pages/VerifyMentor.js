@@ -146,6 +146,7 @@ const VerifyMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
                 <div className="w-[50%]">
@@ -154,6 +155,7 @@ const VerifyMentor = () => {
                     type="password"
                     sidetextback=""
                     color={PasswordCSS}
+                    isRequired={true}
                   />
                 </div>
               </div> */}
