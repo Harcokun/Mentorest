@@ -82,7 +82,7 @@ const RegisterMentor = () => {
         formData.append("name", e.target[3].value);
         formData.append("surname", e.target[5].value);
         formData.append("phonenumber", e.target[6].value);
-        formData.append("textarea", e.target[9].value);
+        formData.append("description", e.target[9].value);
         formData.append("price", e.target[10].value);
         formData.append("availabletime", e.target[11].value);
         formData.append("file", e.target[4].files[0]);

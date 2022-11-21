@@ -14,44 +14,44 @@ const BookingDetailMentee = () => {
   const [bookingList, setBookingList] = useState([]);
 
   useEffect(() => {
-    setBookingList([
-      {
-        id: "123456",
-        mentor: {
-          id: 1,
-          name: "Ena",
-          img: ena_icon,
-        },
-        slip: slip_test,
-        date: "2022/11/28",
-        time: "12:59",
-        link: "zoom url 1",
-      },
-      {
-        id: "987654",
-        mentor: {
-          id: 2,
-          name: "Shirayuki",
-          img: shirayuki_icon,
-        },
-        slip: "",
-        date: "2022/11/28",
-        time: "12:59",
-        link: "zoom url 2",
-      },
-    ]);
-    // try {
-    //   axios
-    //     .get("", {
-    //       headers: {
-    //         Authorization: "Bearer " + Token,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       setBookingList(res.data);
-    //     });
-    // } catch (error) {}
+    // setBookingList([
+    //   {
+    //     id: "123456",
+    //     mentor: {
+    //       id: 1,
+    //       name: "Ena",
+    //       img: ena_icon,
+    //     },
+    //     slip: slip_test,
+    //     date: "2022/11/28",
+    //     time: "12:59",
+    //     link: "zoom url 1",
+    //   },
+    //   {
+    //     id: "987654",
+    //     mentor: {
+    //       id: 2,
+    //       name: "Shirayuki",
+    //       img: shirayuki_icon,
+    //     },
+    //     slip: "",
+    //     date: "2022/11/28",
+    //     time: "12:59",
+    //     link: "zoom url 2",
+    //   },
+    // ]);
+    try {
+      axios
+        .get("", {
+          headers: {
+            Authorization: "Bearer " + Token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setBookingList(res.data);
+        });
+    } catch (error) {}
   }, []);
 
   return (
