@@ -1,6 +1,6 @@
 import MentorList from "./MentorList";
 
-const MentorLists = ({ Mentorlists }) => {
+const MentorLists = ({ Mentorlists, role }) => {
   return (
     <div className="w-full">
       <div className="grid sm:grid-cols-3">
@@ -10,8 +10,8 @@ const MentorLists = ({ Mentorlists }) => {
             <div className=" place-content-center flex p-4">
               <div className="w-[70%]">
                 <MentorList
-                  name={Mentor.name}
-                  description={Mentor.description}
+                  mentorData={Mentor}
+                  role={role}
                 />
               </div>
             </div>

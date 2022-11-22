@@ -56,8 +56,8 @@ const RegisterMentee = () => {
       checkPassword &&
       checkEmail &&
       e.target[3].value &&
-      e.target[5].value &&
-      e.target[4].value
+      e.target[5].value 
+      // && e.target[4].value
     ) {
       try {
         var formData = new FormData();

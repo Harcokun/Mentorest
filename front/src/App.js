@@ -52,7 +52,7 @@ function App() {
       element: <VerifyMentor />,
     },
     {
-      path: "/booking/mentor/:id",
+      path: "/booking/mentor",
       element: <BookingDetailMentor />,
     },
     {

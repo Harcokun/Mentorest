@@ -46,7 +46,7 @@ const EditProfileMentee = () => {
       if (inputUserData.surname)
         formData.append("surname", inputUserData.surname);
       if (inputUserData.profileImg)
-        formData.append("profile_image", inputUserData.profileImgUrl);
+        formData.append("file", inputUserData.profileImgUrl);
       console.log(formData);
       axios({
         method: "post",
@@ -205,13 +205,14 @@ const EditProfileMentee = () => {
                           type="file"
                           className={`${
                             !isSent &&
-                            !(userData.profile_image || inputUserData.profileImg)
+                            (
+                              userData.profile_image || inputUserData.profileImg
+                            )
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          defaultValue={userData.profile_image}
                           onChange={(event) => {
                             if (event.target.files[0]) {
                               const objectUrl = URL.createObjectURL(
@@ -271,7 +272,7 @@ const EditProfileMentee = () => {
             </div>
             <div className="flex place-content-center py-4">
               <div className="w-1/2 flex place-content-center sm:pl-20">
-                <DeleteAccountButton />
+                <DeleteAccountButton userId={localStorage.getItem("userData").id} token={token} />
               </div>
               <div className="w-1/2 flex place-content-center">
                 <button

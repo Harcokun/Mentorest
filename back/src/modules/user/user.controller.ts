@@ -39,6 +39,7 @@ export class UserController {
     @Req() req,
   ) {
     try {
+      console.log(file);
       if (file !== undefined) {
         var s3File = await this.s3Service.uploadFile(file);
       }

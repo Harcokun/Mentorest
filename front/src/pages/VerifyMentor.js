@@ -1,196 +1,180 @@
-import { useContext, useEffect, useState } from "react";
-import TextFormRegister from "../components/TextFormRegister";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-// import { UserContext } from "../hooks/UserContext";
-import { NavbarContext } from "../hooks/NavbarContext";
-import logo from "../hamburger.png";
+import { useContext, useEffect, useState } from "react";
+import DeleteAccountButton from "../components/DeleteAccountButton";
+import Loading from "../components/Loading";
+import TextFormRegister from "../components/TextFormRegister";
+import { UserContext } from "../hooks/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const VerifyMentor = () => {
+  // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
   const navigate = useNavigate();
-  const { id } = useParams();
-  const RegExEmail = /.+@.+\..+/gm;
-  const [EmailData, setEmailData] = useState("");
-  const [PasswordData, setPasswordData] = useState("");
-  const [RePasswordData, setRePasswordData] = useState("");
-  const [NameData, setNameData] = useState("");
-  const [SurnameData, setSurnameData] = useState("");
-  const [PhoneNumber, setPhoneNumber] = useState("");
-  const [CitizenID, setCitizenID] = useState("");
-  const [BankID, setBankID] = useState("");
-  const [Yourself, setYourself] = useState("");
-  const [price, setPrice] = useState("");
-  const [Datetime, setDatetime] = useState("");
-  const [MoneyProfileURL, setMoneyProfileURL] = useState();
-  const [ProfileURL, setProfileURL] = useState();
-  const [ProfileCitizenURL, setProfileCitizenURL] = useState();
+  const token = localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : localStorage.setItem("token", "");
+  const [userData, setUserData] = useState();
+  const [isSent, setSent] = useState(false);
+  const [inputUserData, setInputUserData] = useState({
+    password: "",
+    confirmPassword: "",
+    profileImg: undefined,
+    profileImgUrl: "",
+    phoneNumber: "",
+    description: "",
+    price: 0,
+    availableTime: "",
+  });
+  const [isPasswordValid, setPasswordValid] = useState(false);
+
+  useEffect(() => {
+    if (
+      inputUserData.password &&
+      inputUserData.password === inputUserData.confirmPassword
+    ) {
+      setPasswordValid(true);
+    } else setPasswordValid(false);
+  }, [inputUserData.password, inputUserData.confirmPassword]);
 
   const handleVerify = () => {
-    //go back
-    navigate("/", { replace: true });
-  };
+
+  }
+
   const handleFinish = () => {
-    //go back
-    navigate("/", { replace: true });
-  };
-  const { setState } = useContext(NavbarContext);
+    
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
 
-    if (true) {
-      try {
-        var formData = new FormData();
-        formData.append("email", e.target[0].value);
-        formData.append("password", e.target[1].value);
-        formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[6].files[0]);
-        formData.append("file", e.target[7].files[0]);
-        console.log(formData);
-        axios
-          .post(process.env.REACT_APP_REST_API + "/user", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            navigate("/login", { replace: true });
-          });
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      var formData = new FormData();
+      if (isPasswordValid) formData.append("password", inputUserData.password);
+      if (inputUserData.profileImg)
+        formData.append("profile_image", inputUserData.profileImg);
+      if (inputUserData.phoneNumber)
+        formData.append("telephone_number", inputUserData.phoneNumber);
+      if (inputUserData.description)
+        formData.append("profile_description", inputUserData.description);
+      if (inputUserData.price) formData.append("price", inputUserData.price);
+      if (inputUserData.availableTime)
+        formData.append("date_time_booking", inputUserData.availableTime);
+      console.log(formData);
+      axios({
+        method: "post",
+        url: process.env.REACT_APP_REST_API + "/mentor/update",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+        },
+      }).then((res) => {
+        console.log(res);
+        navigate("/", { replace: true });
+      });
+    } catch (err) {
+      console.log(err);
     }
+    setSent(true);
   };
 
   useEffect(() => {
-    setState("main");
     try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      axios.get(process.env.REACT_APP_REST_API + "/user").then((res) => {
+      axios({
+        method: "get",
+        url: process.env.REACT_APP_REST_API + "/mentor/" + localStorage.getItem("userData").id,
+        headers: { Authorization: "Bearer " + token },
+      }).then((res) => {
         console.log(res);
-        setEmailData(res.data.email);
-        setPasswordData(res.data.password);
-        setRePasswordData(res.data.password);
-        setNameData(res.data.name);
-        setSurnameData(res.data.surname);
-
-        setProfileURL(res.data.image);
-        setPhoneNumber(res.data.phone);
-        setCitizenID(res.data.citizenID);
-        setBankID(res.data.bankID);
-        setYourself(res.data.about);
-        setPrice(res.data.price);
-        setDatetime(res.data.date);
-        setMoneyProfileURL(res.data.bankimage);
-        setProfileCitizenURL(res.data.citizencard);
-        navigate("/login", { replace: true });
+        setUserData(res.data);
       });
     } catch (err) {
       console.log(err);
     }
   }, []);
+
+  if (!userData) return <Loading />;
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        ข้อมูลผู้ให้คำปรึกษา
+        แก้ไขข้อมูลส่วนตัว
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
           <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
             <div className="space-y-4 pt-10">
+              <div className="text-right font-bold mr-10 text-red-600">
+                หมายเหตุ: *** คือ ไม่สามารถแก้ไขข้อมูลได้
+              </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-[80%]  place-content-between flex ">
-                    <div className="p-2 sm:px-6 flex">อีเมล</div>
-                    <div className="p-2">
-                      <div className={`rounded-md`} name="" id="">
-                        {EmailData ? EmailData : "EmailData"}
-                      </div>
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6 flex">
+                      อีเมล<div className="">***</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          userData.email
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                        defaultValue={userData.email}
+                        disabled={true}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="sm:flex place-content-between">
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-[80%]  place-content-between flex ">
-                      <div className="p-2 sm:px-6">รหัสผ่าน</div>
-                      <div className="p-2">
-                        {PasswordData ? PasswordData : "PasswordData"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-[80%]  place-content-between flex ">
-                      <div className="p-2 sm:px-6">ยืนยันรหัสผ่าน</div>
-                      <div className="p-2">
-                        {RePasswordData ? RePasswordData : "RePasswordData"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row place-content-between">
-                <div className="w-full flex flex-col">
-                  <div className="w-[100%]">
-                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
-                      <div className="w-[80%]  place-content-between flex ">
-                        <div className="p-2 sm:px-6 flex">ชื่อจริง</div>
-                        <div>
-                          <div className={`rounded-md p-2`} name="" id="">
-                            {NameData ? NameData : "NameData"}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-[100%]">
-                    <div className="p-2 sm:py-6 place-content-center flex w-[full]">
-                      <div className="w-[80%]  place-content-between flex ">
-                        <div className="p-2 sm:px-6 flex">นามสกุล</div>
-                        <div>
-                          <div className={`rounded-md p-2`} name="" id="">
-                            {SurnameData ? SurnameData : "SurnameData"}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-[100%]">
-                  <div className="p-2 sm:py-6 place-content-center flex w-[full]">
-                    <div className="w-[80%]  place-content-between flex flex-col sm:flex-row">
-                      <div className="p-2 sm:px-6 flex">รูปภาพ</div>
-                      <div className="flex-col flex">
-                        {ProfileURL ? (
-                          <img src={ProfileURL} width={"60%"} />
-                        ) : (
-                          <img src={logo} />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="  px-6 flex">เบอร์โทรศัพท์</div>
+                      <div className="p-2 px-6 flex">รหัสผ่านใหม่</div>
                       <div>
-                        <div className={`rounded-md w-[100%]`} name="" id="">
-                          {PhoneNumber ? PhoneNumber : "PhoneNumber"}
-                        </div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.password
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              password: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">ยืนยันรหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.confirmPassword
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              confirmPassword: event.target.value,
+                            });
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -200,17 +184,168 @@ const VerifyMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="  px-6 flex">หมายเลขบัตรประชาชน</div>
-                      <div>{CitizenID ? CitizenID : "CitizenID"}</div>
+                      <div className="p-2 px-6 flex">
+                        ชื่อจริง<div className="">***</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            userData.name
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.name}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
+                      <div className="p-2 px-6 flex">
+                        รูปภาพ<div className="text-red-600">*</div>
+                      </div>
+                      <div className="flex-col px-6 flex">
+                        <input
+                          type="file"
+                          className={`${
+                            !isSent &&
+                            !(
+                              userData.profile_image || inputUserData.profileImg
+                            )
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          } border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.profile_image}
+                          onChange={(event) => {
+                            if (event.target.files[0]) {
+                              const objectUrl = URL.createObjectURL(
+                                event.target.files[0]
+                              );
+                              setInputUserData({
+                                ...inputUserData,
+                                profileImg: event.target.files[0],
+                                profileImgUrl: objectUrl,
+                              });
+                              // free memory when ever this component is unmounted
+                              return () => URL.revokeObjectURL(objectUrl);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex place-content-center">
+                    <img
+                      src={
+                        inputUserData.profileImgUrl
+                          ? inputUserData.profileImgUrl
+                          : userData.profile_image
+                      }
+                      width={"60%"}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6 flex">
+                      นามสกุล<div className="">***</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          userData.surname
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        id=""
+                        defaultValue={userData.surname}
+                        disabled={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6">เบอร์โทรศัพท์</div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          !isSent && !inputUserData.phoneNumber
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        defaultValue={userData.telephone_number}
+                        id=""
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            phoneNumber: event.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">
+                        หมายเลขบัตรประชาชน<div className="">***</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !userData.citizenId
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.citizenId}
+                          disabled={true}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="  px-6 flex">หมายเลขบัญชีธนาคาร</div>
+                      <div className="p-2 px-6 flex">
+                        หมายเลขบัญชีธนาคาร<div className="">***</div>
+                      </div>
                       <div>
-                        <div>{BankID ? BankID : "BankID"}</div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            !userData.bookbank_number
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.bookbank_number}
+                          disabled={true}
+                        />
                       </div>
                     </div>
                   </div>
@@ -220,13 +355,11 @@ const VerifyMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6 flex">รูปบัตรประชาชน</div>
+                      <div className="p-2 px-6 flex">
+                        รูปบัตรประชาชน<div className="">***</div>
+                      </div>
                       <div className="flex-col px-6  flex">
-                        {ProfileCitizenURL ? (
-                          <img src={ProfileCitizenURL} width={"100%"} />
-                        ) : (
-                          <img src={logo} width={"100%"} />
-                        )}
+                        <img src={userData.citizen_image} width={"100%"} />
                       </div>
                     </div>
                   </div>
@@ -234,9 +367,12 @@ const VerifyMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
+                      <div className="p-2 px-6">
+                        รูปหน้าสมุดบัญชีธนาคาร
+                        <div className="">***</div>
+                      </div>
                       <div className="flex-col flex px-6 ">
-                        <img src={MoneyProfileURL} width={"60%"} />
+                        <img src={userData.bookbank_image} width={"100%"} />
                       </div>
                     </div>
                   </div>
@@ -251,22 +387,24 @@ const VerifyMentor = () => {
                       </div>
                     </div>
                     <div className="w-full flex place-content-center">
-                      <div
-                        className={`border-[#8157A1]/50
-                         border-2 rounded-md w-[80%]`}
-                      >
-                        {Yourself ? Yourself : "Yourself"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="sm:flex place-content-between">
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="  px-6 flex">ราคา(/ชั่วโมง)</div>
-                      <div>{price ? price : "price"}</div>
+                      <textarea
+                        defaultValue={
+                          userData.profile_description
+                            ? userData.profile_description
+                            : "Explain yourself. Please refrain from confuse your future self"
+                        }
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            description: event.target.value,
+                          });
+                        }}
+                        className={`${
+                          !inputUserData.description
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[80%]`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -276,16 +414,24 @@ const VerifyMentor = () => {
                   <div className="w-[100%] flex flex-col ">
                     <div className="p-2 flex place-content-center w-full">
                       <div className="w-[80%]">
-                        <div>อธิบายความเป็นตัวเอง</div>
+                        <div>วัน/เวลาที่สะดวก</div>
                       </div>
                     </div>
                     <div className="w-full flex place-content-center">
-                      <div
-                        className={`border-[#8157A1]/50
-                         border-2 rounded-md w-[80%]`}
-                      >
-                        {Datetime ? Datetime : "Datetime"}
-                      </div>
+                      <textarea
+                        defaultValue={userData.date_time_booking}
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            availableTime: event.target.value,
+                          });
+                        }}
+                        className={`${
+                          !isSent && !inputUserData.availableTime
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[80%]`}
+                      />
                     </div>
                   </div>
                 </div>

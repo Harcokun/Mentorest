@@ -81,13 +81,13 @@ const RegisterMentor = () => {
         formData.append("password", e.target[1].value);
         formData.append("name", e.target[3].value);
         formData.append("surname", e.target[5].value);
-        formData.append("phonenumber", e.target[6].value);
-        formData.append("description", e.target[9].value);
+        formData.append("telephone_phonenumber", e.target[6].value);
+        formData.append("profile_description", e.target[9].value);
         formData.append("price", e.target[10].value);
-        formData.append("availabletime", e.target[11].value);
-        formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[7].files[0]);
-        formData.append("file", e.target[8].files[0]);
+        formData.append("date_time_booking", e.target[11].value);
+        formData.append("profile_image", e.target[4].files[0]);
+        formData.append("bookbank_image", e.target[7].files[0]);
+        formData.append("citizen_image", e.target[8].files[0]);
         console.log(formData);
         axios
           .post(process.env.REACT_APP_REST_API + "/user", formData, {

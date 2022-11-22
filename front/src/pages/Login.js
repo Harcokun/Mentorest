@@ -39,11 +39,9 @@ const Login = () => {
           // setToken(res.data.token);
           // setUserId(decode(res.data.token).id);
           // setPosition(decode(res.data.token).position);
-          if (decodedToken.position === "user") {
-            // setState("main");
-            localStorage.setItem("navBarState", "main");
-            navigate("/", { replace: true });
-          }
+          localStorage.setItem("navBarState", "main");
+          navigate("/", { replace: true });
+
         });
     } catch (err) {
       console.log(err);

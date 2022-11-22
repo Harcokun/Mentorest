@@ -28,9 +28,15 @@ const Navbar = () => {
           position: "",
         })
       );
-  const token = localStorage.getItem("token")? localStorage.getItem("token") : localStorage.setItem("token", "");
-  const navBarState = localStorage.getItem("navBarState")? localStorage.getItem("navBarState") : "main-not-login|";
-  const loginState = localStorage.getItem("loginState")? localStorage.getItem("loginState") : localStorage.setItem("loginState", "logout");
+  const token = localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : localStorage.setItem("token", "");
+  const navBarState = localStorage.getItem("navBarState")
+    ? localStorage.getItem("navBarState")
+    : "main-not-login|";
+  const loginState = localStorage.getItem("loginState")
+    ? localStorage.getItem("loginState")
+    : localStorage.setItem("loginState", "logout");
   const [toggle, setToggle] = useState(false);
   const [toggleRegister, setToggleRegister] = useState(false);
   const [toggleHam, setToggleHam] = useState(false);
@@ -75,8 +81,20 @@ const Navbar = () => {
               </button>
               {toggle && (
                 <div className="border-[#8157A1] border-2 rounded-md bg-white">
-                  <div className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-t-md flex">
-                    ดูโปรไฟล์
+                  <div
+                    className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-t-md flex"
+                    onClick={() => {
+                      if (userData.position === "user")
+                        navigate("/booking/mentee", {
+                          replace: true,
+                        });
+                      if (userData.position === "mentor")
+                        navigate("/booking/mentor", {
+                          replace: true,
+                        });
+                    }}
+                  >
+                    รายการการจอง
                   </div>
                   <div
                     className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-b-md flex"
@@ -110,6 +128,7 @@ const Navbar = () => {
                           // setLogin(false)
                           localStorage.removeItem("userData");
                           localStorage.removeItem("token");
+                          localStorage.setItem("navBarState", "login");
                           localStorage.setItem("loginState", "logout");
                           navigate("/login", { replace: true });
                         });

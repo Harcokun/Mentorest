@@ -215,7 +215,6 @@ const EditProfileMentor = () => {
                           } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          defaultValue={userData.profile_image}
                           onChange={(event) => {
                             if (event.target.files[0]) {
                               const objectUrl = URL.createObjectURL(
