@@ -16,10 +16,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(
-    @InjectModel(LoggingMongo.name)
-    private readonly loggingModel: Model<LoggingDocument>,
-  ) {}
+  constructor() // private readonly loggingModel: Model<LoggingDocument>, // @InjectModel(LoggingMongo.name)
+  {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request_at = new Date();
     if (context.switchToHttp().getRequest().url == '/auth/logout') {
@@ -34,16 +32,16 @@ export class LoggingInterceptor implements NestInterceptor {
         const header = req.headers;
         const request = req.body;
         const response = value;
-        await this.loggingModel.create({
-          req,
-          request_at,
-          serviceName,
-          uuid,
-          response_at,
-          header,
-          request,
-          response,
-        });
+        // await this.loggingModel.create({
+        //   req,
+        //   request_at,
+        //   serviceName,
+        //   uuid,
+        //   response_at,
+        //   header,
+        //   request,
+        //   response,
+        // });
         return value;
       }),
     );

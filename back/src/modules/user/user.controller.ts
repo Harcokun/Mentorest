@@ -1,3 +1,4 @@
+import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './../../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { DeleteUser } from './dto/delete-user.dto';
@@ -29,6 +30,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly s3Service: S3Service,
+    private readonly prisma: PrismaService,
   ) {}
 
   @Post('user')
@@ -62,9 +64,8 @@ export class UserController {
   @Get('user/info')
   // @UseGuards(AuthGuard())
   async getInfo(@Req() req: any) {
-    console.log(req.body);
+    const user = await this.prisma.user.findFirst();
 
-    const user = req.user;
     const infoUser = await this.userService.getInfoUser(user.id);
     return infoUser;
   }

@@ -65,7 +65,7 @@ const Navbar = () => {
                   <div
                     className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-b-md flex"
                     onClick={() => {
-                      navigate("/edit-profile", { replace: true });
+                      navigate("/user/info/mentee", { replace: true });
                     }}
                   >
                     แก้ไขโปรไฟล์
