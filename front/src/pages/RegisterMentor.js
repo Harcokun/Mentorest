@@ -1,175 +1,120 @@
-import { useContext, useEffect, useState } from "react";
-import TextFormRegister from "../components/TextFormRegister";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import DeleteAccountButton from "../components/DeleteAccountButton";
+import Loading from "../components/Loading";
+import TextFormRegister from "../components/TextFormRegister";
+import { UserContext } from "../hooks/UserContext";
 import { useNavigate } from "react-router-dom";
-// import { UserContext } from "../hooks/UserContext";
-import { NavbarContext } from "../hooks/NavbarContext";
 
 const RegisterMentor = () => {
+  // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
   const navigate = useNavigate();
-  const RegExEmail = /.+@.+\..+/gm;
-  const [color, setColor] = useState(false);
-  const [EmailTextCSS, setEmailTextCSS] = useState("");
-  const [PasswordCSS, setPasswordCSS] = useState("");
-  const [NameCSS, setNameCSS] = useState("");
-  const [SurnameCSS, setSurnameCSS] = useState("");
-  const [PhoneNumberCSS, setPhoneNumberCSS] = useState("");
-  const [ProfileCSS, setProfileCSS] = useState("");
-  const [MoneyProfileCSS, setMoneyProfileCSS] = useState("");
-  const [ProfileCitizenCSS, setProfileCitizenCSS] = useState("");
-  const [TextareaCSS, setTextareaCSS] = useState("");
-  const [HourlyPriceCSS, setHourlyPriceCSS] = useState();
-  const [AvailableTimeCSS, setAvailableTimeCSS] = useState();
-  const [MoneyProfile, setMoneyProfile] = useState();
-  const [MoneyProfileURL, setMoneyProfileURL] = useState();
-  const [Profile, setProfile] = useState();
-  const [ProfileURL, setProfileURL] = useState("");
-  const [ProfileCitizen, setProfileCitizen] = useState("");
-  const [ProfileCitizenURL, setProfileCitizenURL] = useState("");
-  const [textarea, setTextarea] = useState(
-    "Explain yourself. Please refrain from confuse your future self"
-  );
-  const [availableTime, setAvailableTime] = useState("");
+  const token = localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : localStorage.setItem("token", "");
+  const [userData, setUserData] = useState();
+  const [isSent, setSent] = useState(false);
+  const [inputUserData, setInputUserData] = useState({
+    password: "",
+    confirmPassword: "",
+    profileImg: "",
+    profileImgUrl: "",
+    phoneNumber: "",
+    description: "",
+    price: 0,
+    availableTime: "",
+  });
+  const [isPasswordValid, setPasswordValid] = useState(false);
 
-  const handleTextareaChange = (event) => {
-    setTextarea(event.target.value);
-  };
-  const handleSetProfile = (e) => {
-    setProfile(e.target.files[0]);
-  };
-  const handleSetMoneyProfile = (e) => {
-    setMoneyProfile(e.target.files[0]);
-  };
-  const handleSetProfileCitizen = (e) => {
-    setProfileCitizen(e.target.files[0]);
-  };
-  const { setState } = useContext(NavbarContext);
+  useEffect(() => {
+    if (
+      inputUserData.password &&
+      inputUserData.password === inputUserData.confirmPassword
+    ) {
+      setPasswordValid(true);
+    } else setPasswordValid(false);
+  }, [inputUserData.password, inputUserData.confirmPassword]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
-    const checkEmail = RegExEmail.test(e.target[0].value);
-    let checkPassword = false;
-    if (e.target[1].value === e.target[2].value && e.target[1].value) {
-      checkPassword = true;
+
+    try {
+      var formData = new FormData();
+      if (isPasswordValid) formData.append("password", inputUserData.password);
+      if (inputUserData.profileImg)
+        formData.append("profile_image", inputUserData.profileImg);
+      if (inputUserData.phoneNumber)
+        formData.append("telephone_number", inputUserData.phoneNumber);
+      if (inputUserData.description)
+        formData.append("profile_description", inputUserData.description);
+      if (inputUserData.price) formData.append("price", inputUserData.price);
+      if (inputUserData.availableTime)
+        formData.append("date_time_booking", inputUserData.availableTime);
+      console.log(formData);
+      axios({
+        method: "post",
+        url: process.env.REACT_APP_REST_API + "/mentor/update",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+        },
+      }).then((res) => {
+        console.log(res);
+        navigate("/", { replace: true });
+      });
+    } catch (err) {
+      console.log(err);
     }
-    checkPassword? setPasswordCSS("") : setPasswordCSS("rgb(239 68 68)");
-    checkEmail? setEmailTextCSS("") : setEmailTextCSS("rgb(239 68 68)");
-    e.target[3].value? setNameCSS("") : setNameCSS("rgb(239 68 68)");
-    e.target[4].value?  setProfileCSS("") : setProfileCSS("rgb(239 68 68)");
-    e.target[5].value? setSurnameCSS("") : setSurnameCSS("rgb(239 68 68)");
-    e.target[6].value? setPhoneNumberCSS("") : setPhoneNumberCSS("rgb(239 68 68)");
-    e.target[7].value? setProfileCitizenCSS("") : setProfileCitizenCSS("rgb(239 68 68)");
-    e.target[8].value? setMoneyProfileCSS("") : setMoneyProfileCSS("rgb(239 68 68)");
-    e.target[9].value? setTextareaCSS("") : setTextareaCSS("rgb(239 68 68)");
-    e.target[10].value? setHourlyPriceCSS("") : setHourlyPriceCSS("rgb(239 68 68)");
-    e.target[11].value? setAvailableTimeCSS("") : setAvailableTimeCSS("rgb(239 68 68)");
-    
-    if (
-      checkPassword &&
-      checkEmail &&
-      e.target[3].value &&
-      e.target[5].value &&
-      e.target[4].value &&
-      e.target[6].value &&
-      e.target[7].value &&
-      e.target[8].value &&
-      e.target[10].value
-    ) {
-      try {
-        var formData = new FormData();
-        formData.append("email", e.target[0].value);
-        formData.append("password", e.target[1].value);
-        formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("telephone_phonenumber", e.target[6].value);
-        formData.append("profile_description", e.target[9].value);
-        formData.append("price", e.target[10].value);
-        formData.append("date_time_booking", e.target[11].value);
-        formData.append("profile_image", e.target[4].files[0]);
-        formData.append("bookbank_image", e.target[7].files[0]);
-        formData.append("citizen_image", e.target[8].files[0]);
-        console.log(formData);
-        axios
-          .post(process.env.REACT_APP_REST_API + "/user", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            navigate("/login", { replace: true });
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    setSent(true);
   };
-  useEffect(() => {
-    setState("register");
-    if (!Profile) {
-      setProfileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(Profile);
-    setProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [Profile]);
 
   useEffect(() => {
-    setState("register");
-    if (!ProfileCitizen) {
-      setProfileCitizenURL(undefined);
-      return;
+    try {
+      axios({
+        method: "get",
+        url: process.env.REACT_APP_REST_API + "/mentor/" + JSON.parse(localStorage.getItem("userData")).id,
+        headers: { Authorization: "Bearer " + token },
+      }).then((res) => {
+        console.log(res);
+        setUserData(res.data.mentorData);
+      });
+    } catch (err) {
+      console.log(err);
     }
+  }, []);
 
-    const objectUrl = URL.createObjectURL(ProfileCitizen);
-    setProfileCitizenURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [ProfileCitizen]);
-
-  useEffect(() => {
-    setState("register");
-    if (!MoneyProfile) {
-      setMoneyProfileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(MoneyProfile);
-    setMoneyProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [MoneyProfile]);
+  if (!userData) return <Loading />;
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        ลงทะเบียนสำหรับผู้ให้คำปรึกษา
+        แก้ไขข้อมูลส่วนตัว
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
           <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
             <div className="space-y-4 pt-10">
+              <div className="text-right font-bold mr-10 text-red-600">
+                หมายเหตุ: *** คือ ไม่สามารถแก้ไขข้อมูลได้
+              </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
                     <div className="p-2 px-6 flex">
-                      อีเมล<div className="text-red-600">*</div>
+                      อีเมล<div className="">***</div>
                     </div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !EmailTextCSS
+                          userData.email
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         id=""
+                        defaultValue={userData.email}
+                        disabled={true}
                       />
                     </div>
                   </div>
@@ -177,22 +122,54 @@ const RegisterMentor = () => {
               </div>
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="รหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                    isRequired={true}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">รหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent || !inputUserData.password
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              password: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่าน"
-                    type="password"
-                    sidetextback=""
-                    color={PasswordCSS}
-                    isRequired={true}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">ยืนยันรหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent || !inputUserData.confirmPassword
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              confirmPassword: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="sm:flex place-content-between">
@@ -200,16 +177,20 @@ const RegisterMentor = () => {
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
                       <div className="p-2 px-6 flex">
-                        ชื่อจริง<div className="text-red-600">*</div>
+                        ชื่อจริง<div className="">***</div>
                       </div>
                       <div>
                         <input
                           type={"text"}
                           className={`${
-                            !NameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                            userData.name
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
+                          defaultValue={userData.name}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -225,40 +206,63 @@ const RegisterMentor = () => {
                         <input
                           type="file"
                           className={`${
-                            !ProfileCSS
+                            !isSent ||
+                            !(
+                              userData.profile_image || inputUserData.profileImg
+                            )
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          onChange={handleSetProfile}
+                          onChange={(event) => {
+                            if (event.target.files[0]) {
+                              const objectUrl = URL.createObjectURL(
+                                event.target.files[0]
+                              );
+                              setInputUserData({
+                                ...inputUserData,
+                                profileImg: event.target.files[0],
+                                profileImgUrl: objectUrl,
+                              });
+                              // free memory when ever this component is unmounted
+                              return () => URL.revokeObjectURL(objectUrl);
+                            }
+                          }}
                         />
-                        {/* <button className="w-[60%]">
-                          <a href={ProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={ProfileURL} width={"100%"} />
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex place-content-center"></div> */}
+                  <div className="flex place-content-center">
+                    <img
+                      src={
+                        inputUserData.profileImgUrl
+                          ? inputUserData.profileImgUrl
+                          : userData.profile_image
+                      }
+                      width={"60%"}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
                     <div className="p-2 px-6 flex">
-                      นามสกุล<div className="text-red-600">*</div>
+                      นามสกุล<div className="">***</div>
                     </div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                          userData.surname
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         id=""
+                        defaultValue={userData.surname}
+                        disabled={true}
                       />
                     </div>
                   </div>
@@ -267,18 +271,73 @@ const RegisterMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      เบอร์โทรศัพท์<div className="text-red-600">*</div>
-                    </div>
+                    <div className="p-2 px-6">เบอร์โทรศัพท์</div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !PhoneNumberCSS ? "border-[#8157A1]/50" : "border-red-500"
+                          !isSent || !inputUserData.phoneNumber
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
+                        defaultValue={userData.telephone_number}
                         id=""
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            phoneNumber: event.target.value,
+                          });
+                        }}
                       />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:flex place-content-between">
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">
+                        หมายเลขบัตรประชาชน<div className="">***</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            userData.citizenId
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.citizenId}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:w-[50%]">
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">
+                        หมายเลขบัญชีธนาคาร<div className="">***</div>
+                      </div>
+                      <div>
+                        <input
+                          type={"text"}
+                          className={`${
+                            userData.bookbank_number
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          defaultValue={userData.bookbank_number}
+                          disabled={true}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -288,26 +347,10 @@ const RegisterMentor = () => {
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
                       <div className="p-2 px-6 flex">
-                        รูปบัตรประชาชน<div className="text-red-600">*</div>
+                        รูปบัตรประชาชน<div className="">***</div>
                       </div>
                       <div className="flex-col px-6  flex">
-                        <input
-                          type="file"
-                          className={`${
-                            !ProfileCitizenCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetProfileCitizen}
-                        />
-                        {/* <button className="w-[60%]">
-                          <a href={ProfileCitizenURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={ProfileCitizenURL} width={"100%"} />
+                        <img src={userData.citizen_image} width={"100%"} />
                       </div>
                     </div>
                   </div>
@@ -315,25 +358,12 @@ const RegisterMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between ">
-                      <div className="p-2 px-6">รูปหน้าสมุดบัญชีธนาคาร</div>
+                      <div className="p-2 px-6">
+                        รูปหน้าสมุดบัญชีธนาคาร
+                        <div className="">***</div>
+                      </div>
                       <div className="flex-col flex px-6 ">
-                        <input
-                          type="file"
-                          className={`${
-                            !MoneyProfileCSS
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={handleSetMoneyProfile}
-                        />
-                        {/* <button className="w-[60%]">
-                          <a href={MoneyProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={MoneyProfileURL} width={"100%"} />
+                        <img src={userData.bookbank_image} width={"100%"} />
                       </div>
                     </div>
                   </div>
@@ -349,33 +379,22 @@ const RegisterMentor = () => {
                     </div>
                     <div className="w-full flex place-content-center">
                       <textarea
-                        placeholder={textarea}
-                        onChange={handleTextareaChange}
+                        defaultValue={
+                          userData.profile_description
+                            ? userData.profile_description
+                            : "Explain yourself. Please refrain from confuse your future self"
+                        }
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            description: event.target.value,
+                          });
+                        }}
                         className={`${
-                          !TextareaCSS
+                          !isSent || !inputUserData.description
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="sm:w-[50%]">
-                <div className="p-2 py-6 place-content-center flex w-[full]">
-                  <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      ราคา(/ชั่วโมง)<div className="text-red-600">*</div>
-                    </div>
-                    <div>
-                      <input
-                        type={"text"}
-                        className={`${
-                          !HourlyPriceCSS ? "border-[#8157A1]/50" : "border-red-500"
-                        } border-2 rounded-md w-[100%]`}
-                        name=""
-                        id=""
-                        defaultValue={0}
                       />
                     </div>
                   </div>
@@ -391,10 +410,15 @@ const RegisterMentor = () => {
                     </div>
                     <div className="w-full flex place-content-center">
                       <textarea
-                        placeholder={""}
-                        onChange={(event) => {setAvailableTime(event.target.value)}}
+                        defaultValue={userData.date_time_booking}
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            availableTime: event.target.value,
+                          });
+                        }}
                         className={`${
-                          !AvailableTimeCSS
+                          !isSent || !inputUserData.availableTime
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
@@ -406,19 +430,29 @@ const RegisterMentor = () => {
             </div>
             <div className="flex place-content-center py-4">
               <div className="w-1/2 flex place-content-center sm:pl-20">
-                <button className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-4 sm:px-10 p-2 rounded-md">
-                  ย้อนกลับ
-                </button>
+                <DeleteAccountButton />
               </div>
               <div className="w-1/2 flex place-content-center">
-                <button className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md">
-                  สมัครสมาชิก
+                <button
+                  className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md"
+                  type="submit"
+                  disabled={inputUserData.password != "" && !isPasswordValid}
+                >
+                  ยืนยัน
                 </button>
               </div>
             </div>
           </form>
         </div>
       </div>
+      <button
+          className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
+          onClick={() => {
+            navigate("/", { replace: true });
+          }}
+        >
+          ย้อนกลับ
+        </button>
     </div>
   );
 };

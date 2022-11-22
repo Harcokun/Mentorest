@@ -19,6 +19,7 @@ const MentorInfoReservation = () => {
     date_booking: "",
     time_booking: "",
     file: "",
+    fileUrl: "",
   });
   const [isSent, setSent] = useState(false);
 
@@ -249,7 +250,8 @@ const MentorInfoReservation = () => {
                               );
                               setInputBookingData({
                                 ...inputBookingData,
-                                file: objectUrl,
+                                file: event.target.files[0],
+                                fileUrl: objectUrl,
                               });
                               // free memory when ever this component is unmounted
                               return () => URL.revokeObjectURL(objectUrl);

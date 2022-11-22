@@ -41,8 +41,8 @@ const EditProfileMentor = () => {
     try {
       var formData = new FormData();
       if (isPasswordValid) formData.append("password", inputUserData.password);
-      if (inputUserData.profileImgUrl)
-        formData.append("profile_image", inputUserData.profileImgUrl);
+      if (inputUserData.profileImg)
+        formData.append("profile_image", inputUserData.profileImg);
       if (inputUserData.phoneNumber)
         formData.append("telephone_number", inputUserData.phoneNumber);
       if (inputUserData.description)
