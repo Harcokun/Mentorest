@@ -4,8 +4,8 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../hooks/UserContext";
 
-const DeleteAccountButton = ({ prop }) => {
-  const { setUsername, setPassword, Token, setToken } = useContext(UserContext);
+const DeleteAccountButton = ({ userId }) => {
+  // const { setUsername, setPassword, Token, setToken } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleDelete = (e) => {
@@ -15,7 +15,7 @@ const DeleteAccountButton = ({ prop }) => {
         Authorization: "Bearer " + Token,
       },
     };
-    axios
+    axios()
       .post(process.env.REACT_APP_REST_API + "/user/delete", config)
       .then((res) => {
         setUsername("");
