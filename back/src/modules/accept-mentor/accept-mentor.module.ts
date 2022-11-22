@@ -1,4 +1,4 @@
-import { PrismaModule } from './../../../../rabbitmq-accept-mentee/src/prisma/prisma.module';
+import { PrismaModule } from '../prisma/prisma.module';
 import { Module } from '@nestjs/common';
 import { AcceptMentorService } from './accept-mentor.service';
 import { AcceptMentorController } from './accept-mentor.controller';

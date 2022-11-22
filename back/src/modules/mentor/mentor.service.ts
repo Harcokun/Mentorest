@@ -33,6 +33,8 @@ export class MentorService {
     id: number,
     profile_img_url: any,
   ) {
+    console.log(profile_img_url);
+
     if (profile_img_url === undefined) {
       return await this.prisma.mentor.update({
         where: {

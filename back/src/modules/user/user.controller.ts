@@ -33,74 +33,74 @@ export class UserController {
     private readonly prisma: PrismaService,
   ) {}
 
-  @Post('user')
-  @UseInterceptors(FileInterceptor('file'))
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-    @UploadedFile() file,
-    @Req() req,
-  ) {
-    try {
-      if (file !== undefined) {
-        var s3File = await this.s3Service.uploadFile(file);
-      }
+  // @Post('user')
+  // @UseInterceptors(FileInterceptor('file'))
+  // async createUser(
+  //   @Body() createUserDto: CreateUserDto,
+  //   @UploadedFile() file,
+  //   @Req() req,
+  // ) {
+  //   try {
+  //     if (file !== undefined) {
+  //       var s3File = await this.s3Service.uploadFile(file);
+  //     }
 
-      return await this.userService.createUser(createUserDto, s3File);
-    } catch (err) {
-      console.log(err);
+  //     return await this.userService.createUser(createUserDto, s3File);
+  //   } catch (err) {
+  //     console.log(err);
 
-      return { Error: 'Invalid user requirement' };
-    }
-  }
+  //     return { Error: 'Invalid user requirement' };
+  //   }
+  // }
 
-  @Post('user/delete')
-  @UseGuards(AuthGuard())
-  async deleteUser(@Req() req: any) {
-    const user = req.user;
+  // @Post('user/delete')
+  // @UseGuards(AuthGuard())
+  // async deleteUser(@Req() req: any) {
+  //   const user = req.user;
 
-    return this.userService.deleteUser(user.id);
-  }
+  //   return this.userService.deleteUser(user.id);
+  // }
 
-  @Get('user/info')
-  @UseGuards(AuthGuard())
-  async getInfo(@Req() req: any) {
-    const user = await this.prisma.user.findFirst();
+  // @Get('user/info')
+  // @UseGuards(AuthGuard())
+  // async getInfo(@Req() req: any) {
+  //   const user = await this.prisma.user.findFirst();
 
-    const infoUser = await this.userService.getInfoUser(user.id);
-    return infoUser;
-  }
+  //   const infoUser = await this.userService.getInfoUser(user.id);
+  //   return infoUser;
+  // }
 
-  @Post('user/update')
-  @UseInterceptors(FileInterceptor('file'))
-  @UseGuards(AuthGuard())
-  async updateUser(
-    @Body() updateUserDto: UpdateUserDto,
-    @Req() req: any,
-    @UploadedFile() file,
-  ) {
-    if (file !== undefined) {
-      var s3File = await this.s3Service.uploadFile(file);
-      updateUserDto.profile_image = s3File.Location;
-    }
-    if (updateUserDto.password !== undefined) {
-      const hashPassword = await bcrypt.hash(
-        updateUserDto.password,
-        parseInt(process.env.SALT),
-      );
+  // @Post('user/update')
+  // @UseInterceptors(FileInterceptor('file'))
+  // @UseGuards(AuthGuard())
+  // async updateUser(
+  //   @Body() updateUserDto: UpdateUserDto,
+  //   @Req() req: any,
+  //   @UploadedFile() file,
+  // ) {
+  //   if (file !== undefined) {
+  //     var s3File = await this.s3Service.uploadFile(file);
+  //     updateUserDto.profile_image = s3File.Location;
+  //   }
+  //   if (updateUserDto.password !== undefined) {
+  //     const hashPassword = await bcrypt.hash(
+  //       updateUserDto.password,
+  //       parseInt(process.env.SALT),
+  //     );
 
-      updateUserDto.password = hashPassword;
-    }
+  //     updateUserDto.password = hashPassword;
+  //   }
 
-    const user = req.user;
+  //   const user = req.user;
 
-    return this.userService.updateUser(user.id, updateUserDto);
-  }
+  //   return this.userService.updateUser(user.id, updateUserDto);
+  // }
 
-  @Get('user/booking')
-  @UseGuards(AuthGuard())
-  async userBooking(@Req() req: any) {
-    const user = req.user;
+  // @Get('user/booking')
+  // @UseGuards(AuthGuard())
+  // async userBooking(@Req() req: any) {
+  //   const user = req.user;
 
-    return this.userService.findBooking(user.id);
-  }
+  //   return this.userService.findBooking(user.id);
+  // }
 }

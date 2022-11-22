@@ -104,7 +104,10 @@ export class MentorController {
     @Req() req,
   ) {
     const user = req.user;
+    console.log(user);
+
     console.log(updateMentorDto);
+    console.log('files', files.profile_image[0]);
     updateMentorDto;
     if (updateMentorDto.password !== undefined) {
       const hashPassword = await bcrypt.hash(
@@ -112,14 +115,12 @@ export class MentorController {
         parseInt(process.env.SALT),
       );
 
-      var profile_img_url = undefined;
-      if (files.profile_image !== undefined && files.profile_image[0]) {
-        profile_img_url = await this.s3Service.uploadFile(
-          files.profile_image[0],
-        );
-      }
-
       updateMentorDto.password = hashPassword;
+    }
+    var profile_img_url = undefined;
+
+    if (files.profile_image !== undefined) {
+      profile_img_url = await this.s3Service.uploadFile(files.profile_image[0]);
     }
     return await this.mentorService.updateMentor(
       updateMentorDto,

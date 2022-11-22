@@ -19,32 +19,32 @@ import generatePayload from 'promptpay-qr';
 export class ViewMentorController {
   constructor(private readonly viewMentorService: ViewMentorService) {}
 
-  @Get('admin')
-  @UseGuards(AuthGuard())
-  async findAllMentor() {
-    return await this.viewMentorService.viewDataMentor();
-  }
+  // @Get('admin')
+  // @UseGuards(AuthGuard())
+  // async findAllMentor() {
+  //   return await this.viewMentorService.viewDataMentor();
+  // }
 
-  @Get('mentor/:id')
-  async findMentor(@Param('id') id: string) {
-    const mentorData = await this.viewMentorService.findMentor(+id);
-    const qrCode = await this.genqr(mentorData.price_rate);
+  // @Get('mentor/:id')
+  // async findMentor(@Param('id') id: string) {
+  //   const mentorData = await this.viewMentorService.findMentor(+id);
+  //   const qrCode = await this.genqr(mentorData.price_rate);
 
-    return { qrCode: qrCode.result, mentorData };
-  }
+  //   return { qrCode: qrCode.result, mentorData };
+  // }
 
-  async genqr(amount: number) {
-    const payload = generatePayload('0924070909', { amount: amount });
-    const option = {
-      color: {
-        dark: '#000',
-        light: '#fff',
-      },
-    };
-    const qrocodstring = await qrcode.toDataURL(payload, option).then((url) => {
-      return url;
-    });
+  // async genqr(amount: number) {
+  //   const payload = generatePayload('0924070909', { amount: amount });
+  //   const option = {
+  //     color: {
+  //       dark: '#000',
+  //       light: '#fff',
+  //     },
+  //   };
+  //   const qrocodstring = await qrcode.toDataURL(payload, option).then((url) => {
+  //     return url;
+  //   });
 
-    return { result: qrocodstring };
-  }
+  //   return { result: qrocodstring };
+  // }
 }
