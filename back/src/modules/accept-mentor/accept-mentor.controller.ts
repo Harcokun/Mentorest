@@ -37,5 +37,8 @@ export class AcceptMentorController {
         is_active: true,
       },
     });
+    return {
+      succes: true,
+    };
   }
 }
