@@ -1,3 +1,4 @@
+import { PrismaService } from '../prisma/prisma.service';
 import {
   Controller,
   Get,
@@ -15,7 +16,10 @@ import { UpdateAcceptMentorDto } from './dto/update-accept-mentor.dto';
 
 @Controller('accept-mentor')
 export class AcceptMentorController {
-  constructor(@Inject('ACCEPT_MENTOR') private readonly client: ClientProxy) {}
+  constructor(
+    @Inject('ACCEPT_MENTOR') private readonly client: ClientProxy,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async OnModuleInit() {
     await this.client.connect();
@@ -23,7 +27,18 @@ export class AcceptMentorController {
 
   @Post()
   async acceptMentor(@Body() createAcceptMentorDto: CreateAcceptMentorDto) {
-    this.client.emit('id', createAcceptMentorDto.id);
-    return { data: 'accepted' };
+    // this.client.emit('id', createAcceptMentorDto.id);
+    // return { data: 'accepted' };
+    await this.prisma.mentor.update({
+      where: {
+        id: createAcceptMentorDto.id,
+      },
+      data: {
+        is_active: true,
+      },
+    });
+    return {
+      succes: true,
+    };
   }
 }
