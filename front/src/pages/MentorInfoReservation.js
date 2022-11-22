@@ -5,151 +5,79 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 // import { UserContext } from "../hooks/UserContext";
 import { NavbarContext } from "../hooks/NavbarContext";
 import logo from "../hamburger.png";
+import Loading from "../components/Loading";
 
 const MentorInfoReservation = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { userId } = useParams();
+  const token = localStorage.getItem("token");
+  const [userData, setUserData] = useState({});
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [isLoading, setLoading] = useState(true);
+  const [inputBookingData, setInputBookingData] = useState({
+    id_mentor: userId,
+    date_booking: "",
+    time_booking: "",
+    file: "",
+  });
+  const [isSent, setSent] = useState(false);
 
-  // const id = searchParams.entries();
-  const [SlipCSS, setSlipCSS] = useState();
-  const [NameData, setNameData] = useState("");
-  const [SurnameData, setSurnameData] = useState("");
-  const [CitizenID, setCitizenID] = useState("");
-  const [BankID, setBankID] = useState("");
-  const [Yourself, setYourself] = useState("");
-  const [price, setPrice] = useState("");
-  const [Datetime, setDatetime] = useState("");
-
-  const [MoneyProfile, setMoneyProfile] = useState();
-  const [MoneyProfileURL, setMoneyProfileURL] = useState();
-  const [Profile, setProfile] = useState();
-  const [ProfileURL, setProfileURL] = useState();
-  const [ProfileCitizen, setProfileCitizen] = useState();
-  const [ProfileCitizenURL, setProfileCitizenURL] = useState();
-  const [Slip, setSlip] = useState();
-  const [SlipURL, setSlipURL] = useState();
-  const [textarea, setTextarea] = useState(
-    "The content of a textarea goes in the value attribute"
-  );
-  const [textareaDate, setTextareaDate] = useState(
-    "The content of a textarea goes in the value attribute"
-  );
-
-  const handleBack = () => {
-    //go back
-    navigate("/", { replace: true });
-  };
-  const handleReserve = () => {
-    //go back
-    navigate("/", { replace: true });
-  };
-  const handleTextareaChange = (event) => {
-    setTextarea(event.target.value);
-  };
-  const handleSetProfile = (e) => {
-    setProfile(e.target.files[0]);
-  };
-  const handleSetSlip = (e) => {
-    setSlip(e.target.files[0]);
-  };
-  const handleSetMoneyProfile = (e) => {
-    setMoneyProfile(e.target.files[0]);
-  };
-  const handleSetProfileCitizen = (e) => {
-    setProfileCitizen(e.target.files[0]);
-  };
-  const { setState } = useContext(NavbarContext);
-  const handleSubmit = (e) => {
+  const handleReserve = (e) => {
     e.preventDefault();
-    console.log(e);
-    if (true) {
-      try {
-        var formData = new FormData();
-        formData.append("email", e.target[0].value);
-        formData.append("password", e.target[1].value);
-        formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("file", e.target[4].files[0]);
-        formData.append("file", e.target[6].files[0]);
-        formData.append("file", e.target[7].files[0]);
-        console.log(formData);
-        axios
-          .post(process.env.REACT_APP_REST_API + "/user", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            navigate("/login", { replace: true });
-          });
-      } catch (err) {
-        console.log(err);
-      }
+
+    try {
+      var formData = new FormData();
+      formData.append("id_mentor", userId);
+      formData.append("date_booking", inputBookingData.date_booking);
+      formData.append("time_booking", inputBookingData.time_booking);
+      formData.append("file", inputBookingData.file);
+
+      console.log(formData);
+      axios({
+        method: "post",
+        url: process.env.REACT_APP_REST_API + "/booking",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+        },
+      }).then((res) => {
+        console.log(res);
+        navigate("/", { replace: true });
+      });
+    } catch (err) {
+      console.log(err);
     }
+    setSent(true);
   };
 
   useEffect(() => {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      axios.get(process.env.REACT_APP_REST_API + "/user").then((res) => {
+      axios({
+        method: "get",
+        url: process.env.REACT_APP_REST_API + "/mentor/" + userId,
+        headers: { Authorization: "Bearer " + token },
+      }).then((res) => {
         console.log(res);
-        setNameData(res.data.name);
-        setSurnameData(res.data.surname);
-
-        setProfileURL(res.data.image);
-        setCitizenID(res.data.citizenID);
-        setBankID(res.data.bankID);
-        setYourself(res.data.about);
-        setPrice(res.data.price);
-        setDatetime(res.data.date);
-        setMoneyProfileURL(res.data.bankimage);
-        setProfileCitizenURL(res.data.citizencard);
-        navigate("/login", { replace: true });
+        setUserData(res.data.mentorData);
+        setQrCodeUrl(res.data.qrCode);
+        setLoading(false);
       });
     } catch (err) {
       console.log(err);
     }
   }, []);
 
-  useEffect(() => {
-    setState("register");
-    if (!MoneyProfile) {
-      setMoneyProfileURL(undefined);
-      return;
-    }
+  if (isLoading) return <Loading />;
 
-    const objectUrl = URL.createObjectURL(MoneyProfile);
-    setMoneyProfileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [MoneyProfile]);
-  useEffect(() => {
-    setState("register");
-    if (!Slip) {
-      setSlipURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(Slip);
-    setSlipURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [Slip]);
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        ลงทะเบียนสำหรับผู้ให้คำปรึกษา
+        ข้อมูลผู้ให้คำปรึกษา
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
-          <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
+          <form className="flex flex-col space-y-2" onSubmit={handleReserve}>
             <div className="space-y-4 pt-10 border-b-2 border-black">
               <div className="flex flex-col sm:flex-row place-content-between">
                 <div className="w-full flex flex-col">
@@ -159,7 +87,7 @@ const MentorInfoReservation = () => {
                         <div className="p-2 sm:px-6 flex">ชื่อจริง</div>
                         <div>
                           <div className={`rounded-md`} name="" id="">
-                            {NameData ? NameData : "NameData"}
+                            {userData.name ? userData.name : "Mentor Name"}
                           </div>
                         </div>
                       </div>
@@ -171,7 +99,9 @@ const MentorInfoReservation = () => {
                         <div className="p-2 sm:px-6 flex">นามสกุล</div>
                         <div>
                           <div className={`rounded-md`} name="" id="">
-                            {SurnameData ? SurnameData : "SurnameData"}
+                            {userData.surname
+                              ? userData.surname
+                              : "Mentor Surname"}
                           </div>
                         </div>
                       </div>
@@ -183,8 +113,8 @@ const MentorInfoReservation = () => {
                     <div className="w-[80%]  place-content-between flex flex-col sm:flex-row">
                       <div className="p-2 sm:px-6 flex">รูปภาพ</div>
                       <div className="flex-col flex">
-                        {ProfileURL ? (
-                          <img src={ProfileURL} width={"60%"} />
+                        {userData.profile_image ? (
+                          <img src={userData.profile_image} width={"60%"} />
                         ) : (
                           <img src={logo} />
                         )}
@@ -207,7 +137,9 @@ const MentorInfoReservation = () => {
                         className={`border-[#8157A1]/50
                          border-2 rounded-md w-[80%]`}
                       >
-                        {textarea}
+                        {userData.profile_description
+                          ? userData.profile_description
+                          : "No Description"}
                       </div>
                     </div>
                   </div>
@@ -219,7 +151,7 @@ const MentorInfoReservation = () => {
                     <div className="  sm:px-4 flex">
                       ราคา(/ชั่วโมง)<div className="text-red-600">*</div>
                     </div>
-                    <div>{price ? price : "price"}</div>
+                    <div>{userData.price ? userData.price : "250"}</div>
                   </div>
                 </div>
               </div>
@@ -236,7 +168,9 @@ const MentorInfoReservation = () => {
                         className="border-[#8157A1]/50
                          border-2 rounded-md w-[80%]"
                       >
-                        {textareaDate}
+                        {userData.date_time_booking
+                          ? userData.date_time_booking
+                          : "Not Defined"}
                       </div>
                     </div>
                   </div>
@@ -260,6 +194,12 @@ const MentorInfoReservation = () => {
                           className={`border-[#8157A1]/50 border-2 rounded-md w-[80%] sm:w-[100%]`}
                           name=""
                           id=""
+                          onChange={(event) => {
+                            setInputBookingData({
+                              ...inputBookingData,
+                              date_booking: event.target.value,
+                            });
+                          }}
                         />
                       </div>
                     </div>
@@ -277,6 +217,12 @@ const MentorInfoReservation = () => {
                           className={`border-[#8157A1]/50 border-2 rounded-md w-[80%] sm:w-[100%]`}
                           name=""
                           id=""
+                          onChange={(event) => {
+                            setInputBookingData({
+                              ...inputBookingData,
+                              time_booking: event.target.value,
+                            });
+                          }}
                         />
                       </div>
                     </div>
@@ -290,18 +236,32 @@ const MentorInfoReservation = () => {
                         <input
                           type="file"
                           className={`${
-                            !SlipCSS ? "border-[#8157A1]/50" : "border-red-500"
+                            !isSent || !inputBookingData.profileImg
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          onChange={handleSetSlip}
+                          onChange={(event) => {
+                            if (event.target.files[0]) {
+                              const objectUrl = URL.createObjectURL(
+                                event.target.files[0]
+                              );
+                              setInputBookingData({
+                                ...inputBookingData,
+                                file: objectUrl,
+                              });
+                              // free memory when ever this component is unmounted
+                              return () => URL.revokeObjectURL(objectUrl);
+                            }
+                          }}
                         />
-                        {/* <button className="w-[60%]">
-                          <a href={ProfileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={SlipURL} width={"100%"} />
+                        <img
+                          src={
+                            inputBookingData.file ? inputBookingData.file : logo
+                          }
+                          width={"100%"}
+                        />
                       </div>
                     </div>
                   </div>
@@ -312,7 +272,7 @@ const MentorInfoReservation = () => {
                   <div className="w-full sm:w-[80%]  place-content-between flex  flex-col">
                     <div className="px-4 flex">qrcode การโอนเงิน</div>
                     <div className="flex place-content-center">
-                      <img src={logo} />
+                      <img src={qrCodeUrl} />
                     </div>
                   </div>
                 </div>
@@ -322,7 +282,9 @@ const MentorInfoReservation = () => {
               <div className="w-1/2 flex place-content-center sm:pl-20">
                 <button
                   className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white sm:px-10 p-2 rounded-md"
-                  onClick={handleBack}
+                  onClick={() => {
+                    navigate("/", { replace: true });
+                  }}
                 >
                   ย้อนกลับ
                 </button>
@@ -330,7 +292,8 @@ const MentorInfoReservation = () => {
               <div className="w-1/2 flex place-content-center">
                 <button
                   className="bg-[#8157A1] text-white sm:px-10 p-2 rounded-md"
-                  onClick={handleReserve}
+                  type="submit"
+                  disabled={!inputBookingData.date_booking || !inputBookingData.time_booking || !inputBookingData.file}
                 >
                   นัดหมาย
                 </button>

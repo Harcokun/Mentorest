@@ -5,6 +5,7 @@ import Loading from "../components/Loading";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
 import { useNavigate } from "react-router-dom";
+import logo from "../icon-human.png";
 
 const VerifyMentor = () => {
   // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
@@ -17,7 +18,7 @@ const VerifyMentor = () => {
   const [inputUserData, setInputUserData] = useState({
     password: "",
     confirmPassword: "",
-    profileImg: undefined,
+    profileImg: "",
     profileImgUrl: "",
     phoneNumber: "",
     description: "",
@@ -35,12 +36,20 @@ const VerifyMentor = () => {
     } else setPasswordValid(false);
   }, [inputUserData.password, inputUserData.confirmPassword]);
 
-  const handleVerify = () => {
-
-  }
-
-  const handleFinish = () => {
-    
+  const handleVerify = (event) => {
+    event.preventDefault();
+    try {
+      axios({
+        method: "post",
+        url: process.env.REACT_APP_REST_API + "/accept-mentor",
+        data: {"id": userData.id},
+        headers: { Authorization: "Bearer " + token },
+      }).then((res) => {
+        navigate("/", { replace: true });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleSubmit = (e) => {
@@ -81,11 +90,11 @@ const VerifyMentor = () => {
     try {
       axios({
         method: "get",
-        url: process.env.REACT_APP_REST_API + "/mentor/" + localStorage.getItem("userData").id,
+        url: process.env.REACT_APP_REST_API + "/mentor/" + JSON.parse(localStorage.getItem("userData")).id,
         headers: { Authorization: "Bearer " + token },
       }).then((res) => {
         console.log(res);
-        setUserData(res.data);
+        setUserData(res.data.mentorData);
       });
     } catch (err) {
       console.log(err);
@@ -96,7 +105,7 @@ const VerifyMentor = () => {
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        แก้ไขข้อมูลส่วนตัว
+        อนุมัติคำขอเป็นผู้ให้คำปรึกษา
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
@@ -132,58 +141,6 @@ const VerifyMentor = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">รหัสผ่านใหม่</div>
-                      <div>
-                        <input
-                          type={"password"}
-                          className={`${
-                            !isSent && !inputUserData.password
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          }  border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={(event) => {
-                            setInputUserData({
-                              ...inputUserData,
-                              password: event.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">ยืนยันรหัสผ่านใหม่</div>
-                      <div>
-                        <input
-                          type={"password"}
-                          className={`${
-                            !isSent && !inputUserData.confirmPassword
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          }  border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          onChange={(event) => {
-                            setInputUserData({
-                              ...inputUserData,
-                              confirmPassword: event.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="sm:flex place-content-between">
-                <div className="sm:w-[50%]">
-                  <div className="p-2 py-6 place-content-center flex w-[full]">
-                    <div className="w-full sm:w-[80%]  place-content-between flex ">
                       <div className="p-2 px-6 flex">
                         ชื่อจริง<div className="">***</div>
                       </div>
@@ -208,47 +165,13 @@ const VerifyMentor = () => {
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
                       <div className="p-2 px-6 flex">
-                        รูปภาพ<div className="text-red-600">*</div>
-                      </div>
-                      <div className="flex-col px-6 flex">
-                        <input
-                          type="file"
-                          className={`${
-                            !isSent &&
-                            !(
-                              userData.profile_image || inputUserData.profileImg
-                            )
-                              ? "border-[#8157A1]/50"
-                              : "border-red-500"
-                          } border-2 rounded-md w-[100%]`}
-                          name=""
-                          id=""
-                          defaultValue={userData.profile_image}
-                          onChange={(event) => {
-                            if (event.target.files[0]) {
-                              const objectUrl = URL.createObjectURL(
-                                event.target.files[0]
-                              );
-                              setInputUserData({
-                                ...inputUserData,
-                                profileImg: event.target.files[0],
-                                profileImgUrl: objectUrl,
-                              });
-                              // free memory when ever this component is unmounted
-                              return () => URL.revokeObjectURL(objectUrl);
-                            }
-                          }}
-                        />
+                        รูปภาพ<div className="">***</div>
                       </div>
                     </div>
                   </div>
                   <div className="flex place-content-center">
                     <img
-                      src={
-                        inputUserData.profileImgUrl
-                          ? inputUserData.profileImgUrl
-                          : userData.profile_image
-                      }
+                      src={userData.profile_image? userData.profile_image : logo}
                       width={"60%"}
                     />
                   </div>
@@ -280,24 +203,19 @@ const VerifyMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6">เบอร์โทรศัพท์</div>
+                    <div className="p-2 px-6">เบอร์โทรศัพท์<div className="">***</div></div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !isSent && !inputUserData.phoneNumber
+                          userData.telephone_number
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
                         defaultValue={userData.telephone_number}
                         id=""
-                        onChange={(event) => {
-                          setInputUserData({
-                            ...inputUserData,
-                            phoneNumber: event.target.value,
-                          });
-                        }}
+                        disabled={true}
                       />
                     </div>
                   </div>
@@ -314,7 +232,7 @@ const VerifyMentor = () => {
                         <input
                           type={"text"}
                           className={`${
-                            !userData.citizenId
+                            userData.citizenId
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -337,7 +255,7 @@ const VerifyMentor = () => {
                         <input
                           type={"text"}
                           className={`${
-                            !userData.bookbank_number
+                            userData.bookbank_number
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -393,14 +311,9 @@ const VerifyMentor = () => {
                             ? userData.profile_description
                             : "Explain yourself. Please refrain from confuse your future self"
                         }
-                        onChange={(event) => {
-                          setInputUserData({
-                            ...inputUserData,
-                            description: event.target.value,
-                          });
-                        }}
+                        disabled={true}
                         className={`${
-                          !inputUserData.description
+                          userData.profile_description
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
@@ -420,14 +333,9 @@ const VerifyMentor = () => {
                     <div className="w-full flex place-content-center">
                       <textarea
                         defaultValue={userData.date_time_booking}
-                        onChange={(event) => {
-                          setInputUserData({
-                            ...inputUserData,
-                            availableTime: event.target.value,
-                          });
-                        }}
+                        disabled={true}
                         className={`${
-                          !isSent && !inputUserData.availableTime
+                          userData.date_time_booking
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
@@ -446,18 +354,18 @@ const VerifyMentor = () => {
                   verify
                 </button>
               </div>
-              <div className="px-2 sm:px-5  sm:pr-28 flex">
-                <button
-                  className="bg-[#8157A1] text-white px-6 sm:px-10 p-2 rounded-md"
-                  onClick={handleFinish}
-                >
-                  เสร็จสิ้น
-                </button>
-              </div>
             </div>
           </form>
         </div>
       </div>
+      <button
+          className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
+          onClick={() => {
+            navigate("/", { replace: true });
+          }}
+        >
+          ย้อนกลับ
+        </button>
     </div>
   );
 };

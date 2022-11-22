@@ -97,7 +97,7 @@ function App() {
               ></Route>
               <Route
                 exact
-                path="/user/info/reserve/:id"
+                path="/user/info/reserve/:userId"
                 element={<MentorInfoReservation />}
               ></Route>
               <Route

@@ -126,7 +126,7 @@ const EditProfileMentee = () => {
                         <input
                           type={"password"}
                           className={`${
-                            !isSent && !inputUserData.password
+                            !isSent || !inputUserData.password
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -151,7 +151,7 @@ const EditProfileMentee = () => {
                         <input
                           type={"password"}
                           className={`${
-                            !isSent && !inputUserData.confirmPassword
+                            !isSent || !inputUserData.confirmPassword
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -204,8 +204,8 @@ const EditProfileMentee = () => {
                         <input
                           type="file"
                           className={`${
-                            !isSent &&
-                            (userData.profile_image || inputUserData.profileImg)
+                            !isSent ||
+                            !(userData.profile_image || inputUserData.profileImg)
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           } border-2 rounded-md w-[100%]`}

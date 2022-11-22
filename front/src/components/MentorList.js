@@ -19,7 +19,7 @@ const MentorList = ({ mentorData, role }) => {
       </Link>
 
       <div className="border-b-2 border-black text-xl flex">
-        {mentorData.name}
+        {mentorData.name} {mentorData.surname}
       </div>
       <div className="text-lg flex">{mentorData.profile_description}</div>
     </div>
