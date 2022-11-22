@@ -25,16 +25,16 @@ import { BookingModule } from './modules/booking/booking.module';
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    MongooseModule.forRootAsync({
-      useFactory: async () => ({
-        uri: process.env.MONGO_URL,
-      }),
-    }),
-    MongooseModule.forFeature([{ name: LoggingMongo.name, schema: LogSchema }]),
+    // MongooseModule.forRootAsync({
+    //   useFactory: async () => ({
+    //     uri: process.env.MONGO_URL,
+    //   }),
+    // }),
+    // MongooseModule.forFeature([{ name: LoggingMongo.name, schema: LogSchema }]),
     AuthModule,
     UserModule,
     PrismaModule,
-    LoggingModule,
+    // LoggingModule,
 
     MentorModule,
     ViewMentorModule,

@@ -17,8 +17,8 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(
-    @InjectModel(LoggingMongo.name)
-    private readonly loggingModel: Model<LoggingDocument>,
+    // @InjectModel(LoggingMongo.name)
+    // private readonly loggingModel: Model<LoggingDocument>,
   ) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request_at = new Date();
@@ -34,16 +34,16 @@ export class LoggingInterceptor implements NestInterceptor {
         const header = req.headers;
         const request = req.body;
         const response = value;
-        await this.loggingModel.create({
-          req,
-          request_at,
-          serviceName,
-          uuid,
-          response_at,
-          header,
-          request,
-          response,
-        });
+        // await this.loggingModel.create({
+        //   req,
+        //   request_at,
+        //   serviceName,
+        //   uuid,
+        //   response_at,
+        //   header,
+        //   request,
+        //   response,
+        // });
         return value;
       }),
     );

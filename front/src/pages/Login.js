@@ -4,15 +4,19 @@ import { useNavigate } from "react-router-dom";
 import TextForm from "../components/TextForm";
 import { NavbarContext } from "../hooks/NavbarContext";
 import { UserContext } from "../hooks/UserContext";
+import decode from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { Username, setUsername, Password, setPassword, Token, setToken } =
-    useContext(UserContext);
-  const { setState } = useContext(NavbarContext);
+  const loginState = localStorage.getItem("loginState");
+  if(loginState == "login") {
+    navigate("/", { replace: true });
+  }
+  // const { setUserId, setUsername, setPassword, setToken, setPosition } =
+  //   useContext(UserContext);
+  // const { setState } = useContext(NavbarContext);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target[0].value, e.target[1].value);
     try {
       axios
         .post(process.env.REACT_APP_REST_API + "/auth/signin", {
@@ -20,17 +24,34 @@ const Login = () => {
           password: e.target[1].value,
         })
         .then((res) => {
-          setUsername(e.target[0].value);
-          setPassword(e.target[1].value);
-          setToken(res.data.token);
-          navigate("/", { replace: true });
+          const decodedToken = decode(res.data.token);
+          const userData = {
+            id: decodedToken.id,
+            email: e.target[0].value,
+            password: e.target[1].value,
+            position: decodedToken.position,
+          };
+          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("loginState", "login");
+          // setUsername(e.target[0].value);
+          // setPassword(e.target[1].value);
+          // setToken(res.data.token);
+          // setUserId(decode(res.data.token).id);
+          // setPosition(decode(res.data.token).position);
+          if (decodedToken.position === "user") {
+            // setState("main");
+            localStorage.setItem("navBarState", "main");
+            navigate("/", { replace: true });
+          }
         });
     } catch (err) {
       console.log(err);
     }
   };
   useEffect(() => {
-    setState("login");
+    // setState("login");
+    localStorage.setItem("navBarState", "login");
   });
   return (
     <div className="w-full">

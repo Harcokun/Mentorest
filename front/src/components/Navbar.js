@@ -12,9 +12,25 @@ import { NavbarContext } from "../hooks/NavbarContext";
 import { UserContext } from "../hooks/UserContext";
 const Navbar = () => {
   const navigate = useNavigate();
-  const { Username, setUsername, setPassword, Token, setToken } =
-    useContext(UserContext);
-  const { NavState } = useContext(NavbarContext);
+  // const { userId, Username, setUsername, setPassword, Token, setToken, setLogin, position } =
+  //   useContext(UserContext);
+  // const { NavState } = useContext(NavbarContext);
+  const userData = JSON.parse(localStorage.getItem("userData"))
+    ? JSON.parse(localStorage.getItem("userData"))
+    : localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          id: 0,
+          email: "",
+          name: "",
+          surname: "",
+          password: "",
+          position: "",
+        })
+      );
+  const token = localStorage.getItem("token")? localStorage.getItem("token") : localStorage.setItem("token", "");
+  const navBarState = localStorage.getItem("navBarState")? localStorage.getItem("navBarState") : "main-not-login|";
+  const loginState = localStorage.getItem("loginState")? localStorage.getItem("loginState") : localStorage.setItem("loginState", "logout");
   const [toggle, setToggle] = useState(false);
   const [toggleRegister, setToggleRegister] = useState(false);
   const [toggleHam, setToggleHam] = useState(false);
@@ -23,23 +39,23 @@ const Navbar = () => {
   const [isRegisterAble, setRegisterAble] = useState(true);
 
   useEffect(() => {
-    if (NavState === "login") {
+    if (navBarState === "login") {
       setLoginAble(false);
       setRegisterAble(true);
     }
-    if (NavState === "register") {
+    if (navBarState === "register") {
       setLoginAble(true);
       setRegisterAble(true);
     }
-    if (NavState === "main") {
+    if (navBarState === "main") {
       setLoginAble(false);
       setRegisterAble(false);
     }
-    if (NavState === "main-not-login") {
+    if (navBarState === "main-not-login") {
       setLoginAble(true);
       setRegisterAble(true);
     }
-  }, [NavState]);
+  }, [navBarState]);
   if (window.innerWidth >= 640) {
     return (
       <div className="shadow-lg shadow-gray-300 flex place-content-between w-full fixed bg-white">
@@ -47,7 +63,7 @@ const Navbar = () => {
           <a href="/">Mentorest</a>
         </div>
         <div className="fixed right-2 top-2 flex">
-          {Username && (
+          {loginState === "login" && (
             <div className="w-full p-4 place-content-center">
               <button
                 className="bg-[#8157A1] text-white px-12 p-2 rounded-md"
@@ -55,7 +71,7 @@ const Navbar = () => {
                   setToggle(!toggle);
                 }}
               >
-                {Username}
+                {userData.email}
               </button>
               {toggle && (
                 <div className="border-[#8157A1] border-2 rounded-md bg-white">
@@ -65,7 +81,14 @@ const Navbar = () => {
                   <div
                     className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-b-md flex"
                     onClick={() => {
-                      navigate("/edit-profile", { replace: true });
+                      if (userData.position === "user")
+                        navigate("/user/mentee/edit/" + userData.id, {
+                          replace: true,
+                        });
+                      if (userData.position === "mentor")
+                        navigate("/user/mentor/edit/" + userData.id, {
+                          replace: true,
+                        });
                     }}
                   >
                     แก้ไขโปรไฟล์
@@ -77,13 +100,17 @@ const Navbar = () => {
                         .post(
                           process.env.REACT_APP_REST_API + "/auth/signout",
                           {
-                            token: Token,
+                            token: token,
                           }
                         )
                         .then((res) => {
-                          setUsername("");
-                          setPassword("");
-                          setToken("");
+                          // setUsername("");
+                          // setPassword("");
+                          // setToken("");
+                          // setLogin(false)
+                          localStorage.removeItem("userData");
+                          localStorage.removeItem("token");
+                          localStorage.setItem("loginState", "logout");
                           navigate("/login", { replace: true });
                         });
                     }}
@@ -161,10 +188,10 @@ const Navbar = () => {
         {toggleHam && (
           <div className="flex place-content-center border-[#8157A1]">
             <div className="flex flex-col w-[80%] rounded-lg">
-              {Username && (
+              {userData.email && (
                 <div className="w-full place-content-center">
                   <div className="bg-[#8157A1] text-white px-4 p-2 rounded-md">
-                    {Username}
+                    {userData.email}
                   </div>
                   <div className="border-[#8157A1] border-2 rounded-md bg-white">
                     <div className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-t-md flex">
@@ -185,13 +212,16 @@ const Navbar = () => {
                           .post(
                             process.env.REACT_APP_REST_API + "/auth/signout",
                             {
-                              token: Token,
+                              token: token,
                             }
                           )
                           .then((res) => {
-                            setUsername("");
-                            setPassword("");
-                            setToken("");
+                            // setUsername("");
+                            // setPassword("");
+                            // setToken("");
+                            localStorage.removeItem("userData");
+                            localStorage.removeItem("token");
+                            localStorage.setItem("loginState", "logout");
                             navigate("/login", { replace: true });
                           });
                       }}

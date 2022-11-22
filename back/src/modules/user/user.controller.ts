@@ -60,7 +60,7 @@ export class UserController {
   }
 
   @Get('user/info')
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   async getInfo(@Req() req: any) {
     console.log(req.body);
 

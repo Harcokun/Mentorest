@@ -40,15 +40,19 @@ function App() {
       element: <Main />,
     },
     {
-      path: "/user/info/mentee",
+      path: "/user/mentee/edit/:id",
       element: <EditProfileMentee />,
     },
     {
-      path: "/user/info/mentor",
+      path: "/user/mentor/edit/:id",
       element: <EditProfileMentor />,
     },
     {
-      path: "/booking/mentor",
+      path: "/user/mentor/verify/:id",
+      element: <VerifyMentor />,
+    },
+    {
+      path: "/booking/mentor/:id",
       element: <BookingDetailMentor />,
     },
     {
@@ -78,17 +82,17 @@ function App() {
               ></Route>
               <Route
                 exact
-                path="/user/info/mentee"
+                path="/user/mentee/edit/:id"
                 element={<EditProfileMentee />}
               ></Route>
               <Route
                 exact
-                path="/user/info/mentor"
+                path="/user/mentor/edit/:id"
                 element={<EditProfileMentor />}
               ></Route>
               <Route
                 exact
-                path="/verify/mentor/:id"
+                path="/user/mentor/verify/:id"
                 element={<VerifyMentor />}
               ></Route>
               <Route

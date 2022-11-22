@@ -4,11 +4,11 @@ import MentorLists from "../components/MentorLists";
 import TextForm from "../components/TextForm";
 import { NavbarContext } from "../hooks/NavbarContext";
 import { UserContext } from "../hooks/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
-  const { Username, setUsername, Password, setPassword, Token, setToken } =
-    useContext(UserContext);
-  const { setState } = useContext(NavbarContext);
+  // const { Username, Password, Token, isLogin } = useContext(UserContext);
+  // const { setState } = useContext(NavbarContext);
 
   const Mentors = [
     {
@@ -38,21 +38,21 @@ const Main = () => {
     },
   ];
   const handleSubmit = (e) => {
-    console.log(e.target[0].value, e.target[1].value);
-
-    console.log(Username, Password, Token);
-    console.log(process.env.REACT_APP_REST_API, "yoyo");
+    // console.log(e.target[0].value, e.target[1].value);
+    // console.log(process.env.REACT_APP_REST_API, "yoyo");
     try {
       axios.post(process.env.REACT_APP_REST_API + "/");
     } catch (err) {}
     e.preventDefault();
   };
   useEffect(() => {
-    if (Username) {
-      setState("main");
+    if (localStorage.getItem("loginState") === "login") {
+      localStorage.setItem("navBarState", "main");
+      // setState("main");
       //getData
     } else {
-      setState("main-not-login");
+      localStorage.setItem("navBarState", "main-not-login");
+      // setState("main-not-login");
     }
   }, []);
   return (

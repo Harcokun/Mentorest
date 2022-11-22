@@ -1,146 +1,85 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import DeleteAccountButton from "../components/DeleteAccountButton";
+import Loading from "../components/Loading";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
 
 const EditProfileMentee = () => {
-  const { Username, setUsername, Password, setPassword, Token, setToken } =
-    useContext(UserContext);
-  const RegExEmail = /.+@.+\..+/gm;
-  const [EmailTextCSS, setEmailTextCSS] = useState("");
-  const [PasswordCSS, setPasswordCSS] = useState("");
-  const [NameCSS, setNameCSS] = useState("");
-  const [SurnameCSS, setSurnameCSS] = useState("");
-  const [ImageCSS, setImageCSS] = useState("");
-  const [EmailData, setEmailData] = useState("");
-  const [NameData, setNameData] = useState("");
-  const [SurnameData, setSurnameData] = useState("");
-  const [ImageData, setImageData] = useState("");
-  const [FileURL, setFileURL] = useState();
-  const handleSetFile = (e) => {
-    setImageData(e.target.files[0]);
-  };
+  // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
+  const token = localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : localStorage.setItem("token", "");
+  const [userData, setUserData] = useState();
+  const [isSent, setSent] = useState(false);
+  const [inputUserData, setInputUserData] = useState({
+    password: "",
+    confirmPassword: "",
+    email: "",
+    name: "",
+    surname: "",
+    profileImg: undefined,
+    profileImgUrl: "",
+  });
+  const [isPasswordValid, setPasswordValid] = useState(false);
+
+  useEffect(() => {
+    if (
+      inputUserData.password &&
+      inputUserData.password === inputUserData.confirmPassword
+    ) {
+      setPasswordValid(true);
+    } else setPasswordValid(false);
+  }, [inputUserData.password, inputUserData.confirmPassword]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
-    const checkEmail = RegExEmail.test(e.target[0].value);
-    let checkPassword = false;
-    if (e.target[1].value === e.target[2].value && e.target[1].value) {
-      checkPassword = true;
-    }
-    if (checkPassword) {
-      setPasswordCSS("");
-    } else {
-      setPasswordCSS("rgb(239 68 68)");
-    }
-    if (checkEmail) {
-      setEmailTextCSS("");
-    } else {
-      setEmailTextCSS("rgb(239 68 68)");
-    }
-    if (NameData) {
-      setNameCSS("");
-    } else {
-      setNameCSS("rgb(239 68 68)");
-    }
-    if (SurnameData) {
-      setSurnameCSS("");
-    } else {
-      setSurnameCSS("rgb(239 68 68)");
-    }
-    if (ImageData) {
-      setImageCSS("");
-    } else {
-      setImageCSS("rgb(239 68 68)");
-    }
 
-    if (
-      checkPassword &&
-      checkEmail &&
-      e.target[0].value &&
-      e.target[1].value &&
-      e.target[2].value &&
-      e.target[3].value &&
-      e.target[4].value &&
-      e.target[5].value
-    ) {
-      console.log(e.target[4].value);
-      try {
-        var formData = new FormData();
-        formData.append("email", e.target[0].value);
-        formData.append("password", e.target[1].value);
-        formData.append("name", e.target[3].value);
-        formData.append("surname", e.target[5].value);
-        formData.append("file", e.target[4].files[0]);
-        console.log(formData);
-        axios
-          .post(process.env.REACT_APP_REST_API + "/user/update", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: "Bearer " + Token,
-            },
-          })
-          .then((res) => {
-            console.log(res);
-          });
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      console.log("input:", inputUserData)
+      var formData = new FormData();
+      if (isPasswordValid) formData.append("password", inputUserData.password);
+      if (inputUserData.email)
+        formData.append("email", inputUserData.email);
+      if (inputUserData.name)
+        formData.append("name", inputUserData.name);
+      if (inputUserData.surname)
+        formData.append("surname", inputUserData.surname);
+      if (inputUserData.profileImg) formData.append("profile_image", inputUserData.profileImgUrl);
+      console.log(formData);
+      axios({
+        method: "post",
+        url: process.env.REACT_APP_REST_API + "/user/update",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+        },
+      }).then((res) => {
+        console.log(res);
+      });
+    } catch (err) {
+      console.log(err);
     }
-  };
-
-  const handleEmailChange = (e) => {
-    setEmailData(e.target.value);
-    console.log(EmailData);
-  };
-
-  const handleNameChange = (e) => {
-    setNameData(e.target.value);
-    console.log(NameData);
-  };
-
-  const handleSurnameChange = (e) => {
-    setSurnameData(e.target.value);
-    console.log(SurnameData);
+    setSent(true);
   };
 
   useEffect(() => {
     try {
-      axios
-        .get(
-          process.env.REACT_APP_REST_API + "/user/info",
-          {},
-          {
-            headers: {
-              Authorization: "Bearer " + Token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          setEmailData(res.data.email);
-          setNameData(res.data.name);
-          setSurnameData(res.data.surname);
-          setImageData(res.data.image);
-        });
+      axios({
+        method: "get",
+        url: process.env.REACT_APP_REST_API + "/user/info/",
+        headers: { Authorization: "Bearer " + token },
+      }).then((res) => {
+        console.log(res);
+        setUserData(res.data);
+      });
     } catch (err) {
       console.log(err);
     }
   }, []);
 
-  useEffect(() => {
-    if (!ImageData) {
-      setFileURL(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(ImageData);
-    setFileURL(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [ImageData]);
+  if (!userData) return <Loading />;
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
@@ -153,19 +92,26 @@ const EditProfileMentee = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6">อีเมล</div>
+                    <div className="p-2 px-6 flex">
+                      อีเมล
+                    </div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !EmailTextCSS
+                          userData.email
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
-                        value={EmailData}
                         id=""
-                        onChange={handleEmailChange}
+                        defaultValue={userData.email}
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            email: event.target.value,
+                          });
+                        }}
                       />
                     </div>
                   </div>
@@ -174,20 +120,28 @@ const EditProfileMentee = () => {
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <TextFormRegister
-                    sidetext="รหัสผ่าน"
+                    sidetext="รหัสผ่านใหม้"
                     type="password"
                     sidetextback=""
-                    color=""
-                    isRequired={true}
+                    color={
+                      !isSent && !inputUserData.password
+                        ? "border-[#8157A1]/50"
+                        : "border-red-500"
+                    }
+                    isRequired={false}
                   />
                 </div>
                 <div className="sm:w-[50%]">
                   <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่าน"
+                    sidetext="ยืนยันรหัสผ่านใหม่"
                     type="password"
                     sidetextback=""
-                    color={PasswordCSS}
-                    isRequired={true}
+                    color={
+                      !isSent && !inputUserData.password
+                        ? "border-[#8157A1]/50"
+                        : "border-red-500"
+                    }
+                    isRequired={false}
                   />
                 </div>
               </div>
@@ -195,17 +149,26 @@ const EditProfileMentee = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6">ชื่อจริง</div>
+                      <div className="p-2 px-6 flex">
+                        ชื่อจริง
+                      </div>
                       <div>
                         <input
                           type={"text"}
                           className={`${
-                            !NameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                            userData.name
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
                           name=""
-                          value={NameData}
                           id=""
-                          onChange={handleNameChange}
+                          defaultValue={userData.name}
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              name: event.target.value,
+                            });
+                          }}
                         />
                       </div>
                     </div>
@@ -214,43 +177,76 @@ const EditProfileMentee = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
-                      <div className="p-2 px-6">"รูปภาพ"</div>
+                      <div className="p-2 px-6 flex">
+                        รูปภาพ
+                      </div>
                       <div className="flex-col px-6 flex">
                         <input
                           type="file"
                           className={`${
-                            !ImageCSS ? "border-[#8157A1]/50" : "border-red-500"
+                            !isSent &&
+                            (
+                              userData.profile_image || inputUserData.profileImg
+                            )
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
                           name=""
                           id=""
-                          onChange={handleSetFile}
+                          defaultValue={userData.profile_image}
+                          onChange={(event) => {
+                            if (event.target.files[0]) {
+                              const objectUrl = URL.createObjectURL(
+                                event.target.files[0]
+                              );
+                              setInputUserData({
+                                ...inputUserData,
+                                profileImg: event.target.files[0],
+                                profileImgUrl: objectUrl,
+                              });
+                              // free memory when ever this component is unmounted
+                              return () => URL.revokeObjectURL(objectUrl);
+                            }
+                          }}
                         />
-                        {/* <button className="w-[100%]">
-                          <a href={FileURL} target="_blank">
-                            Preview
-                          </a>
-                        </button> */}
-                        <img src={FileURL} width={"100%"} />
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex place-content-center"></div> */}
+                  <div className="flex place-content-center">
+                    <img
+                      src={
+                        inputUserData.profileImgUrl
+                          ? inputUserData.profileImgUrl
+                          : userData.profile_image
+                      }
+                      width={"60%"}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6">นามสกุล</div>
+                    <div className="p-2 px-6 flex">
+                      นามสกุล
+                    </div>
                     <div>
                       <input
                         type={"text"}
                         className={`${
-                          !SurnameCSS ? "border-[#8157A1]/50" : "border-red-500"
+                          userData.surname
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
                         name=""
-                        value={SurnameData}
                         id=""
-                        onChange={handleSurnameChange}
+                        defaultValue={userData.surname}
+                        onChange={(event) => {
+                          setInputUserData({
+                            ...inputUserData,
+                            surname: event.target.value,
+                          });
+                        }}
                       />
                     </div>
                   </div>

@@ -11,7 +11,7 @@ const TextFormRegister = ({ sidetext, sidetextback, type, color, isRequired }) =
           <input
             type={type}
             className={`${
-              !color ? "border-[#8157A1]/50" : "border-red-500"
+              !color ? "border-[#8157A1]/50" : color
             } border-2 rounded-md w-[100%]`}
             name=""
             id=""
