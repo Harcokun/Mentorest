@@ -4,9 +4,11 @@ import DeleteAccountButton from "../components/DeleteAccountButton";
 import Loading from "../components/Loading";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const EditProfileMentee = () => {
   // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : localStorage.setItem("token", "");
@@ -18,7 +20,7 @@ const EditProfileMentee = () => {
     email: "",
     name: "",
     surname: "",
-    profileImg: undefined,
+    profileImg: "",
     profileImgUrl: "",
   });
   const [isPasswordValid, setPasswordValid] = useState(false);
@@ -36,16 +38,15 @@ const EditProfileMentee = () => {
     e.preventDefault();
 
     try {
-      console.log("input:", inputUserData)
+      console.log("input:", inputUserData);
       var formData = new FormData();
       if (isPasswordValid) formData.append("password", inputUserData.password);
-      if (inputUserData.email)
-        formData.append("email", inputUserData.email);
-      if (inputUserData.name)
-        formData.append("name", inputUserData.name);
+      if (inputUserData.email) formData.append("email", inputUserData.email);
+      if (inputUserData.name) formData.append("name", inputUserData.name);
       if (inputUserData.surname)
         formData.append("surname", inputUserData.surname);
-      if (inputUserData.profileImg) formData.append("profile_image", inputUserData.profileImgUrl);
+      if (inputUserData.profileImg)
+        formData.append("profile_image", inputUserData.profileImgUrl);
       console.log(formData);
       axios({
         method: "post",
@@ -57,6 +58,7 @@ const EditProfileMentee = () => {
         },
       }).then((res) => {
         console.log(res);
+        navigate("/", { replace: true });
       });
     } catch (err) {
       console.log(err);
@@ -92,9 +94,7 @@ const EditProfileMentee = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      อีเมล
-                    </div>
+                    <div className="p-2 px-6 flex">อีเมล</div>
                     <div>
                       <input
                         type={"text"}
@@ -119,39 +119,61 @@ const EditProfileMentee = () => {
               </div>
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="รหัสผ่านใหม้"
-                    type="password"
-                    sidetextback=""
-                    color={
-                      !isSent && !inputUserData.password
-                        ? "border-[#8157A1]/50"
-                        : "border-red-500"
-                    }
-                    isRequired={false}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">รหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.password
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              password: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่านใหม่"
-                    type="password"
-                    sidetextback=""
-                    color={
-                      !isSent && !inputUserData.password
-                        ? "border-[#8157A1]/50"
-                        : "border-red-500"
-                    }
-                    isRequired={false}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">ยืนยันรหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.confirmPassword
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              confirmPassword: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex ">
-                      <div className="p-2 px-6 flex">
-                        ชื่อจริง
-                      </div>
+                      <div className="p-2 px-6 flex">ชื่อจริง</div>
                       <div>
                         <input
                           type={"text"}
@@ -177,17 +199,13 @@ const EditProfileMentee = () => {
                 <div className="sm:w-[50%]">
                   <div className="p-2 py-6 place-content-center flex w-[full]">
                     <div className="w-full sm:w-[80%]  place-content-between flex flex-col">
-                      <div className="p-2 px-6 flex">
-                        รูปภาพ
-                      </div>
+                      <div className="p-2 px-6 flex">รูปภาพ</div>
                       <div className="flex-col px-6 flex">
                         <input
                           type="file"
                           className={`${
                             !isSent &&
-                            (
-                              userData.profile_image || inputUserData.profileImg
-                            )
+                            !(userData.profile_image || inputUserData.profileImg)
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
@@ -227,9 +245,7 @@ const EditProfileMentee = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6 flex">
-                      นามสกุล
-                    </div>
+                    <div className="p-2 px-6 flex">นามสกุล</div>
                     <div>
                       <input
                         type={"text"}

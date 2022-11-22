@@ -4,9 +4,11 @@ import DeleteAccountButton from "../components/DeleteAccountButton";
 import Loading from "../components/Loading";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const EditProfileMentor = () => {
   // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : localStorage.setItem("token", "");
@@ -59,6 +61,7 @@ const EditProfileMentor = () => {
         },
       }).then((res) => {
         console.log(res);
+        navigate("/", { replace: true });
       });
     } catch (err) {
       console.log(err);
@@ -119,30 +122,54 @@ const EditProfileMentor = () => {
               </div>
               <div className="sm:flex place-content-between">
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="รหัสผ่านใหม่"
-                    type="password"
-                    sidetextback=""
-                    color={
-                      !isSent && !inputUserData.password
-                        ? "border-[#8157A1]/50"
-                        : "border-red-500"
-                    }
-                    isRequired={true}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">รหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.password
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              password: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="sm:w-[50%]">
-                  <TextFormRegister
-                    sidetext="ยืนยันรหัสผ่านใหม่"
-                    type="password"
-                    sidetextback=""
-                    color={
-                      !isSent && !inputUserData.password
-                        ? "border-[#8157A1]/50"
-                        : "border-red-500"
-                    }
-                    isRequired={true}
-                  />
+                  <div className="p-2 py-6 place-content-center flex w-[full]">
+                    <div className="w-full sm:w-[80%]  place-content-between flex ">
+                      <div className="p-2 px-6 flex">ยืนยันรหัสผ่านใหม่</div>
+                      <div>
+                        <input
+                          type={"password"}
+                          className={`${
+                            !isSent && !inputUserData.confirmPassword
+                              ? "border-[#8157A1]/50"
+                              : "border-red-500"
+                          }  border-2 rounded-md w-[100%]`}
+                          name=""
+                          id=""
+                          onChange={(event) => {
+                            setInputUserData({
+                              ...inputUserData,
+                              confirmPassword: event.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="sm:flex place-content-between">
@@ -410,6 +437,7 @@ const EditProfileMentor = () => {
                 <button
                   className="bg-[#8157A1] text-white px-4 sm:px-10 p-2 rounded-md"
                   type="submit"
+                  disabled={inputUserData.password != "" && !isPasswordValid}
                 >
                   ยืนยัน
                 </button>
