@@ -80,7 +80,7 @@ const RegisterMentor = () => {
         },
       }).then((res) => {
         console.log(res);
-        navigate("/", { replace: true });
+        navigate("/login", { replace: true });
       });
     } catch (err) {
       console.log(err);
@@ -369,13 +369,13 @@ const RegisterMentor = () => {
                           name=""
                           id=""
                           onChange={(event) => {
-                            if (event.target.files[0]) {
+                            if (event.target.files[1]) {
                               const objectUrl = URL.createObjectURL(
-                                event.target.files[0]
+                                event.target.files[1]
                               );
                               setInputUserData({
                                 ...inputUserData,
-                                citizenImg: event.target.files[0],
+                                citizenImg: event.target.files[1],
                               });
                               // free memory when ever this component is unmounted
                               return () => URL.revokeObjectURL(objectUrl);
@@ -404,13 +404,13 @@ const RegisterMentor = () => {
                           name=""
                           id=""
                           onChange={(event) => {
-                            if (event.target.files[0]) {
+                            if (event.target.files[2]) {
                               const objectUrl = URL.createObjectURL(
-                                event.target.files[0]
+                                event.target.files[2]
                               );
                               setInputUserData({
                                 ...inputUserData,
-                                bookbankImg: event.target.files[0],
+                                bookbankImg: event.target.files[2],
                               });
                               // free memory when ever this component is unmounted
                               return () => URL.revokeObjectURL(objectUrl);
