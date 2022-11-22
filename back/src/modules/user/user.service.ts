@@ -87,4 +87,20 @@ export class UserService implements OnModuleInit {
       },
     });
   }
+
+  async findBooking(id: number) {
+    await this.prisma.booking.findMany({
+      where: {
+        id_user: id,
+      },
+      include: {
+        mentor_booking: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
+      },
+    });
+  }
 }

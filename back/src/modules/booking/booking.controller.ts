@@ -28,7 +28,7 @@ export class BookingController {
   @Post('booking')
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard())
-  async createUser(
+  async createBooking(
     @Body() createUserDto: CreateBookingDto,
     @UploadedFile() file,
     @Req() req,

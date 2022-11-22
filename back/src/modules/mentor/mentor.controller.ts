@@ -135,4 +135,9 @@ export class MentorController {
   async viewMentor(@Param('id') id: string) {
     return await this.mentorService.viewMentor(id);
   }
+
+  @Get('mentor/booking')
+  async getInfoMentor(@Req() req) {
+    const user = req.user;
+  }
 }

@@ -62,7 +62,7 @@ export class UserController {
   }
 
   @Get('user/info')
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   async getInfo(@Req() req: any) {
     const user = await this.prisma.user.findFirst();
 
@@ -96,19 +96,11 @@ export class UserController {
     return this.userService.updateUser(user.id, updateUserDto);
   }
 
-  @Post('payment')
-  async genqr() {
-    const payload = generatePayload('0924070909', { amount: 1 });
-    const option = {
-      color: {
-        dark: '#000',
-        light: '#fff',
-      },
-    };
-    const qrocodstring = await qrcode.toDataURL(payload, option).then((url) => {
-      return url;
-    });
+  @Get('user/booking')
+  @UseGuards(AuthGuard())
+  async userBooking(@Req() req: any) {
+    const user = req.user;
 
-    return { result: qrocodstring };
+    return this.userService.findBooking(user.id);
   }
 }
