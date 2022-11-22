@@ -17,7 +17,7 @@ const EditProfileMentor = () => {
   const [inputUserData, setInputUserData] = useState({
     password: "",
     confirmPassword: "",
-    profileImg: undefined,
+    profileImg: "",
     profileImgUrl: "",
     phoneNumber: "",
     description: "",
@@ -41,8 +41,8 @@ const EditProfileMentor = () => {
     try {
       var formData = new FormData();
       if (isPasswordValid) formData.append("password", inputUserData.password);
-      if (inputUserData.profileImg)
-        formData.append("profile_image", inputUserData.profileImg);
+      if (inputUserData.profileImgUrl)
+        formData.append("profile_image", inputUserData.profileImgUrl);
       if (inputUserData.phoneNumber)
         formData.append("telephone_number", inputUserData.phoneNumber);
       if (inputUserData.description)
@@ -73,11 +73,11 @@ const EditProfileMentor = () => {
     try {
       axios({
         method: "get",
-        url: process.env.REACT_APP_REST_API + "/mentor/" + localStorage.getItem("userData").id,
+        url: process.env.REACT_APP_REST_API + "/mentor/" + JSON.parse(localStorage.getItem("userData")).id,
         headers: { Authorization: "Bearer " + token },
       }).then((res) => {
         console.log(res);
-        setUserData(res.data);
+        setUserData(res.data.mentorData);
       });
     } catch (err) {
       console.log(err);
@@ -129,7 +129,7 @@ const EditProfileMentor = () => {
                         <input
                           type={"password"}
                           className={`${
-                            !isSent && !inputUserData.password
+                            !isSent || !inputUserData.password
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -154,7 +154,7 @@ const EditProfileMentor = () => {
                         <input
                           type={"password"}
                           className={`${
-                            !isSent && !inputUserData.confirmPassword
+                            !isSent || !inputUserData.confirmPassword
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -206,7 +206,7 @@ const EditProfileMentor = () => {
                         <input
                           type="file"
                           className={`${
-                            !isSent &&
+                            !isSent ||
                             !(
                               userData.profile_image || inputUserData.profileImg
                             )
@@ -276,7 +276,7 @@ const EditProfileMentor = () => {
                       <input
                         type={"text"}
                         className={`${
-                          !isSent && !inputUserData.phoneNumber
+                          !isSent || !inputUserData.phoneNumber
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[100%]`}
@@ -305,7 +305,7 @@ const EditProfileMentor = () => {
                         <input
                           type={"text"}
                           className={`${
-                            !userData.citizenId
+                            userData.citizenId
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -328,7 +328,7 @@ const EditProfileMentor = () => {
                         <input
                           type={"text"}
                           className={`${
-                            !userData.bookbank_number
+                            userData.bookbank_number
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           }  border-2 rounded-md w-[100%]`}
@@ -391,7 +391,7 @@ const EditProfileMentor = () => {
                           });
                         }}
                         className={`${
-                          !inputUserData.description
+                          !isSent || !inputUserData.description
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
@@ -418,7 +418,7 @@ const EditProfileMentor = () => {
                           });
                         }}
                         className={`${
-                          !isSent && !inputUserData.availableTime
+                          !isSent || !inputUserData.availableTime
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
@@ -445,6 +445,14 @@ const EditProfileMentor = () => {
           </form>
         </div>
       </div>
+      <button
+          className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
+          onClick={() => {
+            navigate("/", { replace: true });
+          }}
+        >
+          ย้อนกลับ
+        </button>
     </div>
   );
 };

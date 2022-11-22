@@ -81,7 +81,7 @@ const Navbar = () => {
               </button>
               {toggle && (
                 <div className="border-[#8157A1] border-2 rounded-md bg-white">
-                  <div
+                  {(userData.position === "user" || userData.position === "mentor") && (<div
                     className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-t-md flex"
                     onClick={() => {
                       if (userData.position === "user")
@@ -95,7 +95,7 @@ const Navbar = () => {
                     }}
                   >
                     รายการการจอง
-                  </div>
+                  </div>)}
                   <div
                     className="text-[#8157A1] bg-white hover:bg-[#8157A1]/25 p-2 rounded-b-md flex"
                     onClick={() => {
@@ -107,6 +107,10 @@ const Navbar = () => {
                         navigate("/user/mentor/edit/" + userData.id, {
                           replace: true,
                         });
+                      // if (userData.position === "admin")
+                      //   navigate("/user/admin/edit/" + userData.id, {
+                      //     replace: true,
+                      //   });
                     }}
                   >
                     แก้ไขโปรไฟล์

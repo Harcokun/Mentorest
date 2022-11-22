@@ -11,7 +11,7 @@ const Main = () => {
   // const { Username, Password, Token, isLogin } = useContext(UserContext);
   // const { setState } = useContext(NavbarContext);
   const token = localStorage.getItem("token");
-  const userData = localStorage.getItem("userData");
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const [mentorLists, setMentorLists] = useState({});
   const [isLoading, setLoading] = useState(true);
   

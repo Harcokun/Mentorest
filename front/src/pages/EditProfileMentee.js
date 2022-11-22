@@ -45,7 +45,7 @@ const EditProfileMentee = () => {
       if (inputUserData.name) formData.append("name", inputUserData.name);
       if (inputUserData.surname)
         formData.append("surname", inputUserData.surname);
-      if (inputUserData.profileImg)
+      if (inputUserData.profileImgUrl)
         formData.append("file", inputUserData.profileImgUrl);
       console.log(formData);
       axios({
@@ -205,9 +205,7 @@ const EditProfileMentee = () => {
                           type="file"
                           className={`${
                             !isSent &&
-                            (
-                              userData.profile_image || inputUserData.profileImg
-                            )
+                            (userData.profile_image || inputUserData.profileImg)
                               ? "border-[#8157A1]/50"
                               : "border-red-500"
                           } border-2 rounded-md w-[100%]`}
@@ -272,7 +270,10 @@ const EditProfileMentee = () => {
             </div>
             <div className="flex place-content-center py-4">
               <div className="w-1/2 flex place-content-center sm:pl-20">
-                <DeleteAccountButton userId={localStorage.getItem("userData").id} token={token} />
+                <DeleteAccountButton
+                  userId={localStorage.getItem("userData").id}
+                  token={token}
+                />
               </div>
               <div className="w-1/2 flex place-content-center">
                 <button
@@ -286,6 +287,14 @@ const EditProfileMentee = () => {
           </form>
         </div>
       </div>
+      <button
+          className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
+          onClick={() => {
+            navigate("/", { replace: true });
+          }}
+        >
+          ย้อนกลับ
+        </button>
     </div>
   );
 };
