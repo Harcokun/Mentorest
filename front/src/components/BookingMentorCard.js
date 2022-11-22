@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 const BookingMentorCard = ({
   bookingId,
   menteeName,
+  menteeSurname,
   menteePic,
   slipUrl,
   date,
@@ -12,26 +13,27 @@ const BookingMentorCard = ({
   token,
 }) => {
   const [meetingLinkUrl, setMeetingLinkUrl] = useState("");
+  const [isSent, setSent] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(meetingLinkUrl);
-    axios
-      .put(
-        process.env.REACT_APP_REST_API + "/booking/" + bookingId,
-        { link: meetingLinkUrl },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      });
+    axios({
+      method: "post",
+      url: process.env.REACT_APP_REST_API + "/sendlink",
+      data: { id: bookingId, url_conference: meetingLinkUrl },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }).then((res) => {
+      console.log(res);
+      setSent(true);
+    });
   };
 
-  useEffect((link) => {setMeetingLinkUrl(link)}, [])
+  useEffect((link) => {
+    setMeetingLinkUrl(link);
+  }, []);
 
   if (slipUrl === "" || slipUrl === undefined) {
     return (
@@ -43,7 +45,9 @@ const BookingMentorCard = ({
               <td className="grid place-content-center text-center w-36">
                 <img src={menteePic} className="w-20 rounded-full" />
               </td>
-              <td className="text-left font-bold w-20">{menteeName}</td>
+              <td className="text-left font-bold w-20">
+                {menteeName} {menteeSurname}
+              </td>
               <td className="text-center">สลิปการโอนเงิน</td>
             </tr>
             <tr className="py-2">
@@ -62,7 +66,7 @@ const BookingMentorCard = ({
           <input
             type={"text"}
             className={`${
-              !meetingLinkUrl ? "border-[#8157A1]/50" : "border-red-500"
+              !isSent && !meetingLinkUrl ? "border-[#8157A1]/50" : "border-red-500"
             } border-2 rounded-md w-96`}
             name="link"
             defaultValue={link}
@@ -91,7 +95,7 @@ const BookingMentorCard = ({
             <td className="grid place-content-center text-center w-36">
               <img src={menteePic} className="w-20 rounded-full" />
             </td>
-            <td className="text-left font-bold w-20">{menteeName}</td>
+            <td className="text-left font-bold w-20">{menteeName} {menteeSurname}</td>
             <td className="text-center">สลิปการโอนเงิน</td>
           </tr>
           <tr className="py-2">
@@ -112,7 +116,7 @@ const BookingMentorCard = ({
         <input
           type={"text"}
           className={`${
-            !meetingLinkUrl ? "border-[#8157A1]/50" : "border-red-500"
+            !isSent && !meetingLinkUrl ? "border-[#8157A1]/50" : "border-red-500"
           } border-2 rounded-md w-96`}
           name="link"
           defaultValue={link}

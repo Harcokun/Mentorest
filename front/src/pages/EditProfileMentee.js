@@ -45,8 +45,8 @@ const EditProfileMentee = () => {
       if (inputUserData.name) formData.append("name", inputUserData.name);
       if (inputUserData.surname)
         formData.append("surname", inputUserData.surname);
-      if (inputUserData.profileImgUrl)
-        formData.append("file", inputUserData.profileImgUrl);
+      if (inputUserData.profileImg)
+        formData.append("file", inputUserData.profileImg);
       console.log(formData);
       axios({
         method: "post",

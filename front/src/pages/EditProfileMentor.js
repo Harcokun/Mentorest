@@ -21,7 +21,7 @@ const EditProfileMentor = () => {
     profileImgUrl: "",
     phoneNumber: "",
     description: "",
-    price: 0,
+    price: 250,
     availableTime: "",
   });
   const [isPasswordValid, setPasswordValid] = useState(false);
@@ -47,7 +47,7 @@ const EditProfileMentor = () => {
         formData.append("telephone_number", inputUserData.phoneNumber);
       if (inputUserData.description)
         formData.append("profile_description", inputUserData.description);
-      if (inputUserData.price) formData.append("price", inputUserData.price);
+      if (inputUserData.price) formData.append("price_rate", inputUserData.price);
       if (inputUserData.availableTime)
         formData.append("date_time_booking", inputUserData.availableTime);
       console.log(formData);
@@ -395,6 +395,31 @@ const EditProfileMentor = () => {
                             ? "border-[#8157A1]/50"
                             : "border-red-500"
                         } border-2 rounded-md w-[80%]`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6">
+                      ราคา/ชั่วโมง<div className="">***</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          userData.price_rate
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        defaultValue={userData.price_rate? userData.price_rate : 250}
+                        id=""
+                        onChange={(event) => {
+                          setInputUserData({...inputUserData, price: event.target.value})
+                        }}
                       />
                     </div>
                   </div>

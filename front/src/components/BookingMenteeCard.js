@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 const BookingMenteeCard = ({
   bookingId,
   mentorName,
+  mentorSurname,
   mentorPic,
   slipUrl,
   date,
@@ -11,29 +12,6 @@ const BookingMenteeCard = ({
   link,
   token,
 }) => {
-  const [meetingLinkUrl, setMeetingLinkUrl] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(meetingLinkUrl);
-    axios
-      .put(
-        process.env.REACT_APP_REST_API + "/booking/" + bookingId,
-        { link: meetingLinkUrl },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      });
-  };
-
-  useEffect((link) => {
-    setMeetingLinkUrl(link);
-  }, []);
 
   if (slipUrl === "" || slipUrl === undefined) {
     return (
@@ -45,7 +23,7 @@ const BookingMenteeCard = ({
               <td className="grid place-content-center text-center w-36">
                 <img src={mentorPic} className="w-20 rounded-full" />
               </td>
-              <td className="text-left font-bold w-20">{mentorName}</td>
+              <td className="text-left font-bold w-20">{mentorName} {mentorSurname}</td>
               <td className="text-center">สลิปการโอนเงิน</td>
             </tr>
             <tr className="py-2">
@@ -59,7 +37,7 @@ const BookingMenteeCard = ({
             </tr>
           </tbody>
         </table>
-        <p className="ml-20 mt-5">Zoom link: {link}</p>
+        <p className="ml-20 mt-5">Zoom link: <a href={`${link}`} target="_blank">{link}</a></p>
       </div>
     );
   }
@@ -72,7 +50,7 @@ const BookingMenteeCard = ({
             <td className="grid place-content-center text-center w-36">
               <img src={mentorPic} className="w-20 rounded-full" />
             </td>
-            <td className="text-left font-bold w-20">{mentorName}</td>
+            <td className="text-left font-bold w-20">{mentorName} {mentorSurname}</td>
             <td className="text-center">สลิปการโอนเงิน</td>
           </tr>
           <tr className="py-2">
@@ -88,7 +66,7 @@ const BookingMenteeCard = ({
           </tr>
         </tbody>
       </table>
-      <p className="ml-20 mt-5">Zoom link: {link}</p>
+      <p className="ml-20 mt-5">Zoom link: <a href={`${link}`} target="_blank">{link}</a></p>
     </div>
   );
 };

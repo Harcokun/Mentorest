@@ -1,3 +1,4 @@
+import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './../../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { DeleteUser } from './dto/delete-user.dto';
@@ -29,6 +30,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly s3Service: S3Service,
+    private readonly prisma: PrismaService,
   ) {}
 
   @Post('user')
@@ -39,11 +41,10 @@ export class UserController {
     @Req() req,
   ) {
     try {
-      console.log(file);
       if (file !== undefined) {
         var s3File = await this.s3Service.uploadFile(file);
       }
-      // return { Error: 'Invalid user requirement' };
+
       return await this.userService.createUser(createUserDto, s3File);
     } catch (err) {
       console.log(err);
@@ -63,9 +64,8 @@ export class UserController {
   @Get('user/info')
   @UseGuards(AuthGuard())
   async getInfo(@Req() req: any) {
-    console.log(req.body);
+    const user = await this.prisma.user.findFirst();
 
-    const user = req.user;
     const infoUser = await this.userService.getInfoUser(user.id);
     return infoUser;
   }
@@ -96,19 +96,11 @@ export class UserController {
     return this.userService.updateUser(user.id, updateUserDto);
   }
 
-  @Post('payment')
-  async genqr() {
-    const payload = generatePayload('0924070909', { amount: 1 });
-    const option = {
-      color: {
-        dark: '#000',
-        light: '#fff',
-      },
-    };
-    const qrocodstring = await qrcode.toDataURL(payload, option).then((url) => {
-      return url;
-    });
+  @Get('user/booking')
+  @UseGuards(AuthGuard())
+  async userBooking(@Req() req: any) {
+    const user = req.user;
 
-    return { result: qrocodstring };
+    return await this.userService.findBooking(user.id);
   }
 }

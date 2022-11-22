@@ -26,6 +26,7 @@ export class BookingService {
       user_booking: { connect: { id: userNumber } },
       payment_img: createBookingDto.payment_img,
     };
+    console.log(booking);
     return await this.prisma.booking.create({ data: booking });
   }
 }

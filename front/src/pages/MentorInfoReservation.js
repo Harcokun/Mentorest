@@ -260,7 +260,7 @@ const MentorInfoReservation = () => {
                         />
                         <img
                           src={
-                            inputBookingData.file ? inputBookingData.file : logo
+                            inputBookingData.fileUrl ? inputBookingData.fileUrl : logo
                           }
                           width={"100%"}
                         />

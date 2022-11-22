@@ -14,7 +14,6 @@ const VerifyMentor = () => {
     ? localStorage.getItem("token")
     : localStorage.setItem("token", "");
   const [userData, setUserData] = useState();
-  const [isSent, setSent] = useState(false);
   const [inputUserData, setInputUserData] = useState({
     password: "",
     confirmPassword: "",
@@ -22,7 +21,7 @@ const VerifyMentor = () => {
     profileImgUrl: "",
     phoneNumber: "",
     description: "",
-    price: 0,
+    price: 250,
     availableTime: "",
   });
   const [isPasswordValid, setPasswordValid] = useState(false);
@@ -42,7 +41,7 @@ const VerifyMentor = () => {
       axios({
         method: "post",
         url: process.env.REACT_APP_REST_API + "/accept-mentor",
-        data: {"id": userData.id},
+        data: { id: userData.id },
         headers: { Authorization: "Bearer " + token },
       }).then((res) => {
         navigate("/", { replace: true });
@@ -50,47 +49,16 @@ const VerifyMentor = () => {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    try {
-      var formData = new FormData();
-      if (isPasswordValid) formData.append("password", inputUserData.password);
-      if (inputUserData.profileImg)
-        formData.append("profile_image", inputUserData.profileImg);
-      if (inputUserData.phoneNumber)
-        formData.append("telephone_number", inputUserData.phoneNumber);
-      if (inputUserData.description)
-        formData.append("profile_description", inputUserData.description);
-      if (inputUserData.price) formData.append("price", inputUserData.price);
-      if (inputUserData.availableTime)
-        formData.append("date_time_booking", inputUserData.availableTime);
-      console.log(formData);
-      axios({
-        method: "post",
-        url: process.env.REACT_APP_REST_API + "/mentor/update",
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Bearer " + token,
-        },
-      }).then((res) => {
-        console.log(res);
-        navigate("/", { replace: true });
-      });
-    } catch (err) {
-      console.log(err);
-    }
-    setSent(true);
   };
 
   useEffect(() => {
     try {
       axios({
         method: "get",
-        url: process.env.REACT_APP_REST_API + "/mentor/" + JSON.parse(localStorage.getItem("userData")).id,
+        url:
+          process.env.REACT_APP_REST_API +
+          "/mentor/" +
+          JSON.parse(localStorage.getItem("userData")).id,
         headers: { Authorization: "Bearer " + token },
       }).then((res) => {
         console.log(res);
@@ -109,7 +77,7 @@ const VerifyMentor = () => {
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
-          <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
+          <form className="flex flex-col space-y-2" onSubmit={handleVerify}>
             <div className="space-y-4 pt-10">
               <div className="text-right font-bold mr-10 text-red-600">
                 หมายเหตุ: *** คือ ไม่สามารถแก้ไขข้อมูลได้
@@ -171,7 +139,9 @@ const VerifyMentor = () => {
                   </div>
                   <div className="flex place-content-center">
                     <img
-                      src={userData.profile_image? userData.profile_image : logo}
+                      src={
+                        userData.profile_image ? userData.profile_image : logo
+                      }
                       width={"60%"}
                     />
                   </div>
@@ -203,7 +173,9 @@ const VerifyMentor = () => {
               <div className="sm:w-[50%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-full sm:w-[80%]  place-content-between flex ">
-                    <div className="p-2 px-6">เบอร์โทรศัพท์<div className="">***</div></div>
+                    <div className="p-2 px-6">
+                      เบอร์โทรศัพท์<div className="">***</div>
+                    </div>
                     <div>
                       <input
                         type={"text"}
@@ -322,6 +294,29 @@ const VerifyMentor = () => {
                   </div>
                 </div>
               </div>
+              <div className="sm:w-[50%]">
+                <div className="p-2 py-6 place-content-center flex w-[full]">
+                  <div className="w-full sm:w-[80%]  place-content-between flex ">
+                    <div className="p-2 px-6">
+                      ราคา/ชั่วโมง<div className="">***</div>
+                    </div>
+                    <div>
+                      <input
+                        type={"text"}
+                        className={`${
+                          userData.price_rate
+                            ? "border-[#8157A1]/50"
+                            : "border-red-500"
+                        } border-2 rounded-md w-[100%]`}
+                        name=""
+                        defaultValue={userData.price_rate}
+                        id=""
+                        disabled={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="w-[100%]">
                 <div className="p-2 py-6 place-content-center flex w-[full]">
                   <div className="w-[100%] flex flex-col ">
@@ -349,7 +344,7 @@ const VerifyMentor = () => {
               <div className="flex place-content-end sm:px-20 ">
                 <button
                   className=" bg-[#F8FD0F] text-[#8157A1] border-2 px-6 sm:px-10 p-2 rounded-md"
-                  onClick={handleVerify}
+                  type="submit"
                 >
                   verify
                 </button>
@@ -359,13 +354,13 @@ const VerifyMentor = () => {
         </div>
       </div>
       <button
-          className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
-          onClick={() => {
-            navigate("/", { replace: true });
-          }}
-        >
-          ย้อนกลับ
-        </button>
+        className=" text-[#8157A1] border-2 border-[#8157A1] hover:bg-[#8157A1] hover:text-white px-10 my-5 mx-24 p-2 rounded-md"
+        onClick={() => {
+          navigate("/", { replace: true });
+        }}
+      >
+        ย้อนกลับ
+      </button>
     </div>
   );
 };

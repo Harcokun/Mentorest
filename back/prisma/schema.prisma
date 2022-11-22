@@ -43,7 +43,7 @@ model Booking {
   id              Int     @id @default(autoincrement())
   id_user         Int
   id_mentor       Int
-  url_conferrence String?
+  url_conference  String?
   payment_img     String
   date_booking    String
   time_booking    String

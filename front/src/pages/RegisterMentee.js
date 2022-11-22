@@ -83,7 +83,8 @@ const RegisterMentee = () => {
     }
   };
   useEffect(() => {
-    setState("register");
+    // setState("register");
+    localStorage.setItem("navBarState", "register");
     if (!File) {
       setFileURL(undefined);
       return;
@@ -98,7 +99,7 @@ const RegisterMentee = () => {
   return (
     <div className="w-full">
       <div className="pt-10 py-6 text-center font-bold text-[32px] text-[#8157A1] text-to-[#D27AD3]">
-        ลงทะเบียนสำหรับผู้รับคำปรึกษา
+        ลงทะเบียนสำหรับผู้ขอคำปรึกษา
       </div>
       <div className="flex place-content-center">
         <div className="border-2 border-[#8157A1] w-[80%] rounded-3xl">
