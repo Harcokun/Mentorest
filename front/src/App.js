@@ -92,7 +92,7 @@ function App() {
               ></Route>
               <Route
                 exact
-                path="/user/mentor/verify/:id"
+                path="/user/mentor/verify/:mentorId"
                 element={<VerifyMentor />}
               ></Route>
               <Route

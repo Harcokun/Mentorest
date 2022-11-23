@@ -369,13 +369,13 @@ const RegisterMentor = () => {
                           name=""
                           id=""
                           onChange={(event) => {
-                            if (event.target.files[1]) {
+                            if (event.target.files[0]) {
                               const objectUrl = URL.createObjectURL(
-                                event.target.files[1]
+                                event.target.files[0]
                               );
                               setInputUserData({
                                 ...inputUserData,
-                                citizenImg: event.target.files[1],
+                                citizenImg: event.target.files[0],
                               });
                               // free memory when ever this component is unmounted
                               return () => URL.revokeObjectURL(objectUrl);
@@ -404,13 +404,13 @@ const RegisterMentor = () => {
                           name=""
                           id=""
                           onChange={(event) => {
-                            if (event.target.files[2]) {
+                            if (event.target.files[0]) {
                               const objectUrl = URL.createObjectURL(
-                                event.target.files[2]
+                                event.target.files[0]
                               );
                               setInputUserData({
                                 ...inputUserData,
-                                bookbankImg: event.target.files[2],
+                                bookbankImg: event.target.files[0],
                               });
                               // free memory when ever this component is unmounted
                               return () => URL.revokeObjectURL(objectUrl);

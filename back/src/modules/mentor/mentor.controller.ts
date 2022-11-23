@@ -136,6 +136,7 @@ export class MentorController {
 
   @Get('view-mentor/:id')
   async viewMentor(@Param('id') id: string) {
+    console.log(id)
     return await this.mentorService.viewMentor(id);
   }
 

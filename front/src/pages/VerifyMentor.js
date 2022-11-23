@@ -4,12 +4,13 @@ import DeleteAccountButton from "../components/DeleteAccountButton";
 import Loading from "../components/Loading";
 import TextFormRegister from "../components/TextFormRegister";
 import { UserContext } from "../hooks/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import logo from "../icon-human.png";
 
 const VerifyMentor = () => {
   // const { Username, setUsername, Password, setPassword, Token, setToken } = useContext(UserContext);
   const navigate = useNavigate();
+  const { mentorId } = useParams();
   const token = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : localStorage.setItem("token", "");
@@ -57,8 +58,7 @@ const VerifyMentor = () => {
         method: "get",
         url:
           process.env.REACT_APP_REST_API +
-          "/mentor/" +
-          JSON.parse(localStorage.getItem("userData")).id,
+          "/mentor/" + mentorId,
         headers: { Authorization: "Bearer " + token },
       }).then((res) => {
         console.log(res);
